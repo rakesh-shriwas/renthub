@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute } from '@angular/router';
 import { PostDetailsComponentStore } from './details.store';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { AsyncPipe, Location, NgIf } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, Location, NgIf } from '@angular/common';
 import { IPostResponse } from '../../models/post.vm';
 import { ICommentRequest, ICommentResponse } from '../../models/comment.vm';
 import { CommentsListComponent } from '../comments-list/comments-list.component';
@@ -23,6 +23,7 @@ import { IUser } from '../../models/user.vm';
     NgIf,
     AsyncPipe,
     CommentsListComponent,
+    CurrencyPipe
   ],
   templateUrl: './post-details.component.html',
   styleUrl: './post-details.component.scss',
