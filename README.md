@@ -2,6 +2,19 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.9.
 
+## Project URL
+https://renthubnagarro.netlify.app/public/post
+
+## Login
+Renters
+Email:: rakesh.shriwas88@gmail.com
+Password :: 123456
+
+Landloard
+Email:: ramesh.shriwas88@gmail.com
+Password :: 123456
+
+
 ## Development server
 
 To start a local development server, run:
