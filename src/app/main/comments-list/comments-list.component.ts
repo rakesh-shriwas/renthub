@@ -1,4 +1,13 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,6 +22,7 @@ import {
 import { CommonService } from '../../services/common.service';
 import { ICommentResponse } from '../../models/comment.vm';
 import { DatePipe } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-comments',
@@ -23,26 +33,33 @@ import { DatePipe } from '@angular/common';
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
-    DatePipe
+    DatePipe,
   ],
   templateUrl: './comments-list.component.html',
   styleUrl: './comments-list.component.scss',
 })
-export class CommentsListComponent implements OnInit {
+export class CommentsListComponent implements OnInit, OnDestroy {
+
   service = inject(CommonService);
-  loggedInUser = signal({})
+  loggedInUser = signal<boolean>(false);
   commentFormControl = new FormControl('', [
-    Validators.minLength(6),
+    Validators.minLength(2),
     this.noWhitespaceValidator,
   ]);
+  private destroy$ = new Subject<void>();
 
   @Input() comments: ICommentResponse[] = [];
   @Input() isLoading: boolean = false;
   @Output() postComment = new EventEmitter<string>();
 
   ngOnInit(): void {
-    const authenticateUser = this.service.getAuthenticateUser();
-    this.loggedInUser.set(authenticateUser);
+    this.service.getAuthenticateUser().pipe(takeUntil(this.destroy$)).subscribe((res) => {
+      if (res) {
+        this.loggedInUser.set(true);
+      }else {
+        this.loggedInUser.set(false);
+      }
+    });
   }
 
   /**
@@ -57,9 +74,13 @@ export class CommentsListComponent implements OnInit {
     }
   }
 
-  // Custom validator: disallow only-whitespace input
   noWhitespaceValidator(control: AbstractControl) {
     const isValid = (control.value || '').trim().length > 0;
     return isValid ? null : { whitespace: true };
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
