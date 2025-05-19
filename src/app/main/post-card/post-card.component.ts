@@ -22,6 +22,5 @@ export class PostCardComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log('userDetails', this.loggedInUserDetails);
   }
 }

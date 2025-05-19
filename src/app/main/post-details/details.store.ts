@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, switchMap, tap } from 'rxjs';
 import { CommonService } from '../../services/common.service';
 import { IPostResponse } from '../../models/post.vm';
-import { ICommentResponse } from '../../models/comment.vm';
+import { ICommentRequest, ICommentResponse } from '../../models/comment.vm';
 import { ComponentStore } from '@ngrx/component-store';
 
 interface PostDetailsInitialState {
@@ -101,9 +101,9 @@ export class PostDetailsComponentStore extends ComponentStore<PostDetailsInitial
       )
   );
 
-  readonly commentOnPost = this.effect((data: Observable<ICommentResponse>) =>
+  readonly commentOnPost = this.effect((data: Observable<ICommentRequest>) =>
     data.pipe(
-      switchMap((req: ICommentResponse) => {
+      switchMap((req: ICommentRequest) => {
         this.setState((state) => ({
           ...state,
           postCommentSuccessfully: false

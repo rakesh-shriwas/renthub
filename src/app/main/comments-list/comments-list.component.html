@@ -34,7 +34,7 @@
       <mat-card-title>{{ comment.userName }}</mat-card-title>
       <div class="d-flex align-items-center gap-1">
         <mat-icon class="material-symbols-outlined"> schedule </mat-icon>
-        <mat-card-subtitle> {{ comment.createdAt }}</mat-card-subtitle>
+        <mat-card-subtitle> {{ comment.createdAt |  date: 'medium'}}</mat-card-subtitle>
       </div>
     </div>
   </mat-card-header>

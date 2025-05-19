@@ -12,6 +12,7 @@ import {
 } from '@angular/forms';
 import { CommonService } from '../../services/common.service';
 import { ICommentResponse } from '../../models/comment.vm';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-comments',
@@ -22,6 +23,7 @@ import { ICommentResponse } from '../../models/comment.vm';
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
+    DatePipe
   ],
   templateUrl: './comments-list.component.html',
   styleUrl: './comments-list.component.scss',
@@ -42,6 +44,12 @@ export class CommentsListComponent implements OnInit {
     const authenticateUser = this.service.getAuthenticateUser();
     this.loggedInUser.set(authenticateUser);
   }
+
+  /**
+   * Post a comment
+   *
+   * @memberof CommentsListComponent
+   */
   postAComment(): void {
     if (this.commentFormControl.valid) {
       this.postComment.emit(this.commentFormControl.value?.trim());

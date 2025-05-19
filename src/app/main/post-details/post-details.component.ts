@@ -8,8 +8,10 @@ import { PostDetailsComponentStore } from './details.store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { AsyncPipe, Location, NgIf } from '@angular/common';
 import { IPostResponse } from '../../models/post.vm';
-import { ICommentResponse } from '../../models/comment.vm';
+import { ICommentRequest, ICommentResponse } from '../../models/comment.vm';
 import { CommentsListComponent } from '../comments-list/comments-list.component';
+import { CommonService } from '../../services/common.service';
+import { IUser } from '../../models/user.vm';
 
 @Component({
   selector: 'app-post-details',
@@ -20,7 +22,7 @@ import { CommentsListComponent } from '../comments-list/comments-list.component'
     MatButtonModule,
     NgIf,
     AsyncPipe,
-    CommentsListComponent
+    CommentsListComponent,
   ],
   templateUrl: './post-details.component.html',
   styleUrl: './post-details.component.scss',
@@ -30,6 +32,7 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   readonly activatedRoute = inject(ActivatedRoute);
   readonly componentStore = inject(PostDetailsComponentStore);
+  private service = inject(CommonService);
   private location = inject(Location);
   currentPostId: number;
 
@@ -49,13 +52,15 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
   readonly commentIsLoading$: Observable<boolean> =
     this.componentStore.selectCommentIsLoading$;
 
-  private service = inject;
-
+  userDetails: IUser;
+  postId: number;
+  
   ngOnInit(): void {
     this.activatedRoute.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
-        this.currentPostId = params?.['id'];
+        this.postId = params?.['id'];
+        this.currentPostId = this.postId;
         this.componentStore.loadPostDetailsById({ postId: this.currentPostId });
         this.componentStore.loadPostCommentsById({
           postId: this.currentPostId,
@@ -71,6 +76,11 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
           });
         }
       });
+    this.service.getAuthenticateUser().subscribe((res) => {
+      if (res) {
+        this.userDetails = res;
+      }
+    });
   }
 
   goBack(): void {
@@ -78,14 +88,14 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
   }
 
   postComment(comment: string): void {
-    // const obj: ICommentResponse = {
-    //   createdAt: new Date().toISOString(),
-    //   postId: 101,
-    //   userId: 5,
-    //   userName: 'Jane Doe',
-    //   comment,
-    // };
-    // this.componentStore.commentOnPost(obj);
+    const obj: ICommentRequest = {
+      createdAt: new Date().toISOString(),
+      postId: this.postId,
+      userId: this.userDetails?.id,
+      userName: this.userDetails?.name,
+      comment,
+    };
+    this.componentStore.commentOnPost(obj);
   }
 
   ngOnDestroy(): void {

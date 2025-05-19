@@ -109,7 +109,6 @@ export class LoginSignupDialogComponent {
             (u) =>
               u.email === formValue.email && u.password === formValue.password
           );
-          console.log('isUserExists', isUserExists);
           if (isUserExists) {
             alert('Login Successfully.....');
             localStorage.setItem('loggedInUser', JSON.stringify(isUserExists));

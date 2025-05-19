@@ -35,14 +35,12 @@ export class MainComponent {
     this.store.dispatch(loadPosts());
     this.service.getAuthenticateUser().subscribe((res) => {
       if (res) {
-        console.log('id', res.id)
         this.loggedInUserDetails.set(res);
         this.userId = res?.id;
       }
     });
     this.posts$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res?.length) {
-        console.log('user')
         // const filterData = res.filter((post) => post.userId === +this.userId);
         this.myPostList.set(res);
       }

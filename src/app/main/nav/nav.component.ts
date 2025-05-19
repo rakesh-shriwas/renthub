@@ -1,6 +1,6 @@
 import { AsyncPipe, NgIf } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { RouterOutlet, RouterLink, Router } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { LoginSignupDialogComponent } from '../login-signup-dialog/login-signup-dialog.component';
 import { CreatePostDialogComponent } from '../create-post-dialog/create-post-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +20,6 @@ import { IUser } from '../../models/user.vm';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
-    RouterOutlet,
     RouterLink,
     AsyncPipe,
     NgIf,
@@ -38,7 +37,6 @@ export class NavComponent implements OnInit {
   ngOnInit(): void {
     this.service.getAuthenticateUser().subscribe((res) => {
       if(res){
-        console.log('Response', res)
         this.loggedInUserDetails$.next(res);
       }
     });
@@ -78,7 +76,7 @@ export class NavComponent implements OnInit {
    * @memberof NavComponent
    */
   logOut() {
-    console.log('------logout');
+    console.log('------logout-------');
     localStorage.removeItem('loggedInUser');
     this.loggedInUserDetails$.next(null);
     this.router.navigate(['/']);

@@ -1,13 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FavoritesComponentStore } from './favorites.store';
 import { Store } from '@ngrx/store';
-import {
-  BehaviorSubject,
-  combineLatest,
-  Observable,
-  Subject,
-  takeUntil,
-} from 'rxjs';
+import { combineLatest, Observable, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { IPostResponse } from '../../models/post.vm';
 import { selectPosts } from '../../store/renthub.selectors';
@@ -16,7 +10,6 @@ import { loadPosts } from '../../store/renthub.action';
 import { PostCardComponent } from '../post-card/post-card.component';
 import { NotRecordFoundComponent } from '../not-record-found/not-record-found.component';
 import { CommonService } from '../../services/common.service';
-import { IUser } from '../../models/user.vm';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
@@ -24,7 +17,7 @@ import { AsyncPipe } from '@angular/common';
   imports: [PostCardComponent, NotRecordFoundComponent],
   templateUrl: './favorites.component.html',
   styleUrl: './favorites.component.scss',
-  providers: [FavoritesComponentStore,AsyncPipe],
+  providers: [FavoritesComponentStore, AsyncPipe],
 })
 export class FavoritesComponent implements OnInit {
   private componentStore = inject(FavoritesComponentStore);

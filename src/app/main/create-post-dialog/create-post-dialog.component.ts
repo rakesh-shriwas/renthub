@@ -17,12 +17,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { createPost, loadPosts } from '../../store/renthub.action';
 import { selectCreatePostSuccess } from '../../store/renthub.selectors';
+import { CommonService } from '../../services/common.service';
 
 interface ICreatePostForm {
   title: FormControl<string | null>;
@@ -53,16 +54,17 @@ interface ICreatePostForm {
     ReactiveFormsModule,
     MatIconModule,
     NgIf,
-    NgFor,
   ],
   templateUrl: './create-post-dialog.component.html',
   styleUrl: './create-post-dialog.component.scss',
 })
 export class CreatePostDialogComponent implements OnInit {
   private store = inject(Store);
+  private service = inject(CommonService);
   readonly dialogRef = inject(MatDialogRef<CreatePostDialogComponent>);
   private destroy$ = new Subject<void>();
   data = inject(MAT_DIALOG_DATA);
+  userId: number;
 
   createPostSuccess$: Observable<boolean> = this.store.select(
     selectCreatePostSuccess
@@ -116,6 +118,11 @@ export class CreatePostDialogComponent implements OnInit {
     this.amenitiesList.forEach((aminity) => {
       this.addAmenity(aminity);
     });
+    this.service.getAuthenticateUser().subscribe((res) => {
+      if (res) {
+        this.userId = res?.id;
+      }
+    });
   }
 
   initForm(): void {
@@ -147,7 +154,7 @@ export class CreatePostDialogComponent implements OnInit {
         createPost({
           payload: {
             ...formValue,
-            userId: 2,
+            userId: this.userId,
             images: [],
             amenities: this.selectedAmenitiesList,
           },
