@@ -1,0 +1,36 @@
+<mat-card class="card" appearance="outlined">
+  <img
+    mat-card-image
+    [src]="post.images[0] || 'assets/images/image-placeholder.jpeg'"
+    [alt]="post.title"
+    loading="lazy"
+    height="212"
+  />
+  <mat-card-content>
+    <p class="card-title">
+      {{ post.title }}
+    </p>
+    <p class="card-description">
+      {{ post.description }}
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    @if (loggedInUserDetails?.role === userRoles.Landlords) {
+    <button mat-button class="ml-auto" (click)="editPost.emit(post)">
+      Edit Details
+    </button>
+    }
+    <button mat-button class="ml-auto" (click)="viewPostDetails.emit(post.id)">
+      View Details
+    </button>
+    @if (loggedInUserDetails?.role === userRoles.Renters) {
+
+    <button mat-fab class="fav-btn" (click)="toggleFavorite.emit(post.id)">
+      <mat-icon> favorite </mat-icon>
+      <!-- <mat-icon>{{
+        post.isFavorite ? "favorite" : "favorite_border"
+      }}</mat-icon> -->
+    </button>
+    }
+  </mat-card-actions>
+</mat-card>

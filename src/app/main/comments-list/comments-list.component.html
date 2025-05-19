@@ -1,0 +1,49 @@
+@if (loggedInUser()) {
+<h4>Comments</h4>
+<div class="comment-form-field">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Leave a comment</mat-label>
+    <textarea
+      matInput
+      placeholder="Leave a comment"
+      rows="3"
+      [formControl]="commentFormControl"
+    ></textarea>
+    @if (commentFormControl.touched &&
+    commentFormControl.errors?.['whitespace']) {
+    <mat-error>Comment cannot be empty or whitespace only</mat-error>
+    } @if (commentFormControl.touched &&
+    commentFormControl.errors?.['minlength']) {
+    <mat-error>Comment must be at least 6 characters long.</mat-error>
+    }
+  </mat-form-field>
+  <button
+    mat-flat-button
+    [disabled]="commentFormControl.invalid"
+    (click)="postAComment()"
+  >
+    Submit
+  </button>
+</div>
+@if (isLoading) {
+<p>Loading...</p>
+} @for (comment of comments; track comment.id) {
+<mat-card appearance="outlined" class="comment-card">
+  <mat-card-header>
+    <div class="d-flex align-items-center justify-content-between gap-2 w-100">
+      <mat-card-title>{{ comment.userName }}</mat-card-title>
+      <div class="d-flex align-items-center gap-1">
+        <mat-icon class="material-symbols-outlined"> schedule </mat-icon>
+        <mat-card-subtitle> {{ comment.createdAt }}</mat-card-subtitle>
+      </div>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <p class="m-0">
+      {{ comment.comment }}
+    </p>
+  </mat-card-content>
+</mat-card>
+}@empty {
+<p class="text-center">There is no Comments</p>
+} }

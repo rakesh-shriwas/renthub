@@ -1,0 +1,18 @@
+.container {
+  max-width: 1320px;
+  margin: 16px auto;
+}
+.post-details {
+  margin-bottom: 16px;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 16px;
+}
+.amenities-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 300px);
+  grid-gap: 32px 16px;
+  margin-bottom: 16px;
+}

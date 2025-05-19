@@ -1,1 +1,72 @@
 /* You can add global styles to this file, and also import other style files */
+
+@use '@angular/material' as mat;
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;background-color: #f9f8f6; }
+
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.toolbar-overrides((
+    container-background-color: #d7e3ff,
+    container-text-color: #005cbb,
+    standard-height: 56px
+  ));
+}
+
+
+// Common Classes
+.w-100{
+  width: 100%;
+}
+.d-flex{
+  display: flex;
+}
+.align-items-center{
+  align-items: center;
+}
+.align-items-start{
+  align-items: start;
+}
+.justify-content-between{
+  justify-content: space-between;
+}
+.gap-1{
+  gap: 4px
+}
+.gap-2{
+  gap: 8px
+}
+.gap-4{
+  gap: 16px
+}
+// .mat-icon {
+//   width: 18px !important;
+//   height: 18px !important;
+//   font-size: 16px;
+//   line-height: 16px;
+//   color: #5d6164;
+// }
+
+
+// Margin Classes
+.m-0{
+  margin: 0px;
+}
+.ml-auto{
+  margin-left: auto;
+}
+
+.img-responsive{
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  aspect-ratio: 1/1;
+}
+.fw-none{
+  font-weight: unset;
+}
+.text-center{
+  text-align: center;
+}

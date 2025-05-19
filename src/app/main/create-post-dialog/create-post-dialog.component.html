@@ -1,0 +1,192 @@
+<h2 mat-dialog-title>Create Post</h2>
+<mat-dialog-content class="mat-typography">
+  <h4>Description</h4>
+  <form [formGroup]="createPostForm">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Title</mat-label>
+      <input
+        matInput
+        placeholder="Enter your AD title"
+        formControlName="title"
+      />
+      @if (createPostForm.get('title')?.touched &&
+      createPostForm.get('title')?.errors?.['required']) {
+      <mat-error>Title is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      class="w-100"
+      *ngIf="createPostForm.get('description') as descriptionControl"
+    >
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        placeholder="Enter a detailed description within 1400 characters"
+        rows="3"
+        formControlName="description"
+      ></textarea>
+      @if (descriptionControl?.touched &&
+      descriptionControl?.hasError('required')) {
+      <mat-error>Description is required</mat-error>
+      } @if (descriptionControl?.touched &&
+      descriptionControl?.hasError('maxlength')) {
+      <mat-error>Content must not exceed 1400 characters.</mat-error>
+      }
+    </mat-form-field>
+
+    <h4>Choose your Apartment/Building</h4>
+
+    <mat-form-field
+      appearance="outline"
+      *ngIf="createPostForm.get('apartmentType') as apartmentTypeControl"
+    >
+      <mat-label>Choose your Apartment/Building</mat-label>
+      <mat-select disableRipple formControlName="apartmentType">
+        <mat-option value="Studio Apartment">Studio Apartment</mat-option>
+        <mat-option value="1 BHK">1 BHK</mat-option>
+        <mat-option value="2 BHK">2 BHK</mat-option>
+        <mat-option value="3 BHK">2 BHK</mat-option>
+      </mat-select>
+      @if (apartmentTypeControl?.touched &&
+      apartmentTypeControl?.hasError('required')) {
+      <mat-error>Field is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      class="w-100"
+      *ngIf="createPostForm.get('name') as nameControl"
+    >
+      <mat-label>Enter the name of yours</mat-label>
+      <input
+        matInput
+        placeholder="Enter the name of yours"
+        formControlName="name"
+      />
+      @if (nameControl?.touched && nameControl?.hasError('required')) {
+      <mat-error>Field is required</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="d-flex align-items-center gap-4">
+      <h4>Is this is shared property?</h4>
+      <mat-radio-group
+        aria-label="Select an option"
+        formControlName="sharedProperty"
+      >
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+      @if (createPostForm.get('sharedProperty')?.hasError('required')) {
+      <mat-error>Shared Property is required</mat-error>
+      }
+    </div>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Property Location</mat-label>
+      <input matInput placeholder="Enter address" formControlName="location" />
+      @if (createPostForm.get('location')?.touched &&
+      createPostForm.get('location')?.hasError('required')) {
+      <mat-error>Field is required</mat-error>
+      }
+    </mat-form-field>
+
+    <h4>Property Details</h4>
+    <div class="d-flex align-items-start gap-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Square feet</mat-label>
+        <input
+          matInput
+          placeholder="Enter area in square feet"
+          formControlName="squareFit"
+        />
+        @if (createPostForm.get('squareFit')?.touched &&
+        createPostForm.get('squareFit')?.hasError('required')) {
+        <mat-error>Field is required</mat-error>
+        }
+      </mat-form-field>
+      <div>
+        <h5 class="m-0">Stay/Lease type</h5>
+        <mat-radio-group
+          aria-label="Select an option"
+          formControlName="stayType"
+        >
+          <mat-radio-button value="long term"
+            >Long term (6+ months)</mat-radio-button
+          >
+          <mat-radio-button value="short term">Shrot term</mat-radio-button>
+          <mat-radio-button value="both">Both</mat-radio-button>
+        </mat-radio-group>
+        @if (createPostForm.get('stayType')?.touched &&
+        createPostForm.get('stayType')?.hasError('required')) {
+        <mat-error>Field is required</mat-error>
+        }
+      </div>
+    </div>
+
+    <div class="d-flex align-items-start gap-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Expected Rent</mat-label>
+        <input
+          matInput
+          placeholder="Enter expected rent"
+          formControlName="rent"
+        />
+        @if (createPostForm.get('rent')?.touched &&
+        createPostForm.get('rent')?.hasError('required')) {
+        <mat-error>Field is required</mat-error>
+        }
+      </mat-form-field>
+      <div>
+        <h5 class="m-0">Price Mode</h5>
+        <mat-radio-group
+          aria-label="Select an option"
+          formControlName="priceMode"
+        >
+          <mat-radio-button value="per month">Per Month</mat-radio-button>
+          <mat-radio-button value="utilites_included"
+            >Utilites includes in rent</mat-radio-button
+          >
+        </mat-radio-group>
+        @if (createPostForm.get('priceMode')?.touched &&
+        createPostForm.get('priceMode')?.hasError('required')) {
+        <mat-error>Field is required</mat-error>
+        }
+      </div>
+      <mat-checkbox formControlName="rentNegotiable">Negotiable</mat-checkbox>
+      @if ( createPostForm.get('rentNegotiable')?.touched && createPostForm.get('rentNegotiable')?.hasError('required')) {
+      <mat-error>Field is required</mat-error>
+      }
+    </div>
+    <div class="d-flex align-items-center gap-4">
+      <h4>Is the room/apartment furnished</h4>
+      <mat-radio-group
+        aria-label="Select an option"
+        formControlName="apartmentFurnished"
+      >
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+      @if ( createPostForm.get('apartmentFurnished')?.hasError('required')) {
+        <mat-error>Field is required</mat-error>
+        }
+    </div>
+
+    <h4>Amenities included</h4>
+    <div class="amenities-section">
+      @for (amenity of amenitiesList; track $index) {
+        <mat-checkbox [checked]="isChecked(amenity)" (change)="onCheckboxChange($event)" [value]="amenity">{{ amenity }}</mat-checkbox>
+      }
+    </div>
+    <h4>Gallery</h4>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-flat-button (click)="createNewPost()">
+    {{ data ? 'Update' : 'Create' }}
+  </button>
+</mat-dialog-actions>

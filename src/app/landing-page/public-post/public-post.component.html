@@ -1,0 +1,11 @@
+<div class="card-container">
+  @for (post of myPostList(); track post.id) {
+  <app-post-card
+    (viewPostDetails)="viewDetails($event)"
+    [post]="post"
+    [loggedInUserDetails]="loggedInUser()"
+  ></app-post-card>
+  }@empty {
+  <app-page-not-found class="no-record"></app-page-not-found>
+  }
+</div>

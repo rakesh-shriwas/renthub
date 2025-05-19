@@ -1,0 +1,18 @@
+.card {
+  position: relative;
+  .card-title{
+    font-weight: 500;
+    font-size: 18px;
+  }
+  .card-description{
+    color: grey;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  .fav-btn {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    border-radius: 50%;
+  }
+}

@@ -1,0 +1,58 @@
+<mat-toolbar>
+  <button
+    mat-button
+    aria-label="Landing Page"
+    class="home-button"
+  >
+    Rent-hub
+  </button>
+  <span class="example-spacer"></span>
+  @if(!(loggedInUserDetails$ | async)){
+  <button
+    mat-button
+    class="example-icon favorite-icon"
+    (click)="openLoginSignupDialog('login')"
+  >
+    Login
+  </button>
+  <button
+    mat-button
+    class="example-icon"
+    (click)="openLoginSignupDialog('signup')"
+  >
+    Signup
+  </button>
+  }
+  <ng-container *ngIf="loggedInUserDetails$ | async as loggedInUserDetails">
+    <button mat-button [routerLink]="['/app']">Home</button>
+    @if (loggedInUserDetails.role === userRoles.Landlords) {
+    <button
+      mat-button
+      (click)="createNewPost()"
+      *ngIf="loggedInUserDetails.role === userRoles.Landlords"
+    >
+      Create New Post
+    </button>
+    <button mat-button [routerLink]="['/app', 'my', 'posts']">
+      <mat-icon>format_list_bulleted</mat-icon>
+      <span>Post List</span>
+    </button>
+    } @if (loggedInUserDetails.role === userRoles.Renters) {
+    <button mat-button [routerLink]="['/app', 'my', 'fav']">
+      <mat-icon>favorite</mat-icon>
+      <span>My Favorite</span>
+    </button>
+    }
+
+    <button mat-button [matMenuTriggerFor]="profileMenu">
+      <mat-icon>account_circle</mat-icon>
+      {{ loggedInUserDetails.name }}
+    </button>
+    <mat-menu #profileMenu="matMenu">
+      <button mat-menu-item (click)="logOut()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </ng-container>
+</mat-toolbar>

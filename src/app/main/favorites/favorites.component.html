@@ -1,0 +1,12 @@
+<div class="card-container">
+  @for (favoritePost of favoritesPostList(); track favoritePost.id) {
+  <app-post-card
+    (viewPostDetails)="viewDetails($event)"
+    (toggleFavorite)="onFavoriteChange($event)"
+    [post]="favoritePost"
+    [loggedInUserDetails]="loggedInUser()"
+  ></app-post-card>
+  }@empty {
+  <app-not-record-found class="no-record"></app-not-record-found>
+  }
+</div>

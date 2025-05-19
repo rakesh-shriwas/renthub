@@ -1,0 +1,27 @@
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { IPostResponse } from '../../models/post.vm';
+import { UserRole } from '../../enums/app.enum';
+
+@Component({
+  selector: 'app-post-card',
+  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule],
+  templateUrl: './post-card.component.html',
+  styleUrl: './post-card.component.scss',
+})
+export class PostCardComponent implements OnInit {
+  @Input() post: IPostResponse;
+  @Input() loggedInUserDetails: any;
+  @Output() viewPostDetails = new EventEmitter();
+  @Output() toggleFavorite = new EventEmitter();
+  @Output() editPost = new EventEmitter();
+  userRoles = UserRole;
+  constructor() {}
+
+  ngOnInit(): void {
+    console.log('userDetails', this.loggedInUserDetails);
+  }
+}

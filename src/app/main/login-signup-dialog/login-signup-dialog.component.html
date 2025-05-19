@@ -1,0 +1,116 @@
+<div class="login-dialog">
+  <div class="login-dialog-header">
+    <div class="login-dialog-title">
+      <h2>
+        {{
+          authMode === authModeType.Login
+            ? "Welcome Back to Rent Hub"
+            : "Join Rent Hub Today"
+        }}! 👋
+      </h2>
+      <p>
+        {{
+          authMode === authModeType.Login
+            ? "Log in to explore new listings or manage your rentals."
+            : "Create your account to find the perfect rental or list your property with ease."
+        }}
+      </p>
+    </div>
+    <button mat-icon-button mat-dialog-close><mat-icon>close</mat-icon></button>
+  </div>
+  <div class="login-dialog-content">
+    <form [formGroup]="loginSignupForm">
+      <div class="d-flex align-items-center gap-2">
+        <p class="m-0">
+          {{ authMode === authModeType.Login ? "Login" : "SignUp" }} as
+        </p>
+        <mat-button-toggle-group formControlName="role">
+          <mat-button-toggle value="renters">Renters</mat-button-toggle>
+          <mat-button-toggle value="landlords">Landlords</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-form-field
+        appearance="outline"
+        class="full-width"
+        *ngIf="loginSignupForm.get('name') as nameControl"
+      >
+        <mat-label>Name</mat-label>
+        <input matInput type="test" formControlName="name" />
+        <mat-icon matSuffix>person</mat-icon>
+        @if (nameControl.touched && nameControl?.errors?.['required']) {
+        <mat-error>Name is required</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field
+        appearance="outline"
+        class="full-width"
+        *ngIf="loginSignupForm.get('email') as emailControl"
+      >
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-icon matSuffix>mail</mat-icon>
+        @if (emailControl?.touched && emailControl?.errors?.['required']) {
+        <mat-error>Email is required.</mat-error>
+        } @if (emailControl?.touched && emailControl?.errors?.['pattern']) {
+        <mat-error>Please enter a valid email address.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline"
+        class="full-width"
+        *ngIf="loginSignupForm.get('password') as passwordControl"
+      >
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-icon matSuffix>lock</mat-icon>
+        @if (passwordControl?.touched && passwordControl?.errors?.['required'])
+        {
+        <mat-error>Password is required.</mat-error>
+        } @if (passwordControl?.touched && passwordControl?.errors?.['pattern'])
+        {
+        <mat-error
+          >Password must be alphanumeric (letters and numbers only)</mat-error
+        >
+        } @if (passwordControl?.touched &&
+        passwordControl?.errors?.['minlength']) {
+        <mat-error>Password must be at least 6 characters long.</mat-error>
+        }
+      </mat-form-field>
+      @if (authMode === authModeType.Login) {
+      <p>
+        Don't have an account?
+        <button
+          type="button"
+          mat-button
+          (click)="toggleAuthMode(authModeType.Signup)"
+        >
+          Sign Up Now
+        </button>
+      </p>
+      } @else {
+      <p>
+        Have an account?
+        <button
+          type="button"
+          mat-button
+          (click)="toggleAuthMode(authModeType.Login)"
+        >
+          SignIn Now
+        </button>
+      </p>
+      }
+    </form>
+  </div>
+  <div class="login-dialog-footer">
+    <button
+      mat-flat-button
+      color="primary"
+      class="full-width"
+      [disabled]="loginSignupForm.invalid"
+      (click)="submitForm()"
+    >
+      {{ authMode === authModeType.Login ? "Login" : "Signup" }}
+    </button>
+  </div>
+</div>
