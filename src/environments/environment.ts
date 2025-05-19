@@ -1,4 +1,4 @@
 export const env = {
   production: false,
-  api_url: 'http://localhost:3000'
+  api_url: 'https://renthub-db.onrender.com'
 };
