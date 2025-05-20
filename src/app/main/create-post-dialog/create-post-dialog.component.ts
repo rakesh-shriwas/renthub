@@ -21,10 +21,9 @@ import { NgFor, NgIf } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
-import { createPost, loadPosts, updateExistingPost } from '../../store/renthub.action';
+import { createPost,  updateExistingPost } from '../../store/renthub.action';
 import { selectCreatePostSuccess } from '../../store/renthub.selectors';
 import { CommonService } from '../../services/common.service';
-import { ImageUploadComponent } from '../image-upload/image-upload.component';
 
 @Component({
   selector: 'app-create-post',
@@ -40,7 +39,6 @@ import { ImageUploadComponent } from '../image-upload/image-upload.component';
     MatIconModule,
     NgIf,
     NgFor,
-    ImageUploadComponent
   ],
   templateUrl: './create-post-dialog.component.html',
   styleUrl: './create-post-dialog.component.scss',

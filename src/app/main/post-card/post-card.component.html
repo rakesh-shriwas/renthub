@@ -13,6 +13,11 @@
     <p class="card-description">
       {{ post.description }}
     </p>
+    <div class="d-flex">
+      <p class="card-description">
+        {{ post.rent | currency : "INR" }}/{{ post.priceMode | titlecase }} - [{{ post.location | titlecase }}]
+      </p>
+    </div>
   </mat-card-content>
   <mat-card-actions>
     @if (loggedInUserDetails?.role === userRoles.Landlords) {

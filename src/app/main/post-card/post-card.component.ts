@@ -5,10 +5,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IPostResponse } from '../../models/post.vm';
 import { UserRole } from '../../enums/app.enum';
+import { CurrencyPipe, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-post-card',
-  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule, TitleCasePipe, CurrencyPipe],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.scss',
 })

@@ -24,7 +24,7 @@
   </button>
   }
   <ng-container *ngIf="loggedInUserDetails$ | async as loggedInUserDetails">
-    <button mat-button [routerLink]="['/app']" routerLinkActive="active">Home</button>
+    <button mat-button [routerLink]="['/app']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</button>
     @if (loggedInUserDetails.role === userRoles.Landlords) {
     <button
       mat-button
