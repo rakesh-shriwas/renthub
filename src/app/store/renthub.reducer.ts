@@ -1,14 +1,20 @@
 import { createReducer, on } from '@ngrx/store';
 import {
+  addFavorite,
+  addRemoveOperationStatus,
   createPost,
   createPostFailure,
   createPostSuccess,
+  loadFavorites,
+  loadFavoritesSuccess,
   loadPosts,
   loadPostSuccess,
+  removeFavorite,
   updateExistingPost,
   updateExistingPostSuccess,
 } from './renthub.action';
 import { IPostResponse } from '../models/post.vm';
+import { IFavoritesResponse } from '../models/favorites.vm';
 
 /** State interface of  Post */
 export interface RentHubState {
@@ -18,6 +24,9 @@ export interface RentHubState {
   error: string | null;
   createPostSuccess: boolean;
   updateExistingPostSuccess: boolean;
+  favorites: IFavoritesResponse[];
+  favoriteIsLoading: boolean;
+  favoriteOperationStatus: boolean;
 }
 
 /** Initial State with default value of  Post */
@@ -28,6 +37,9 @@ export const initialState: RentHubState = {
   error: null,
   createPostSuccess: false,
   updateExistingPostSuccess: false,
+  favorites: [],
+  favoriteIsLoading: false,
+  favoriteOperationStatus: false
 };
 
 /** Post Reducer Creation */
@@ -69,5 +81,27 @@ export const postReducer = createReducer(
     ...state,
     isLoading: false,
     updateExistingPostSuccess: true,
+  })),
+  on(loadFavorites, (state) => ({
+    ...state,
+    favoriteIsLoading: true,
+  })),
+  on(loadFavoritesSuccess, (state, {favorites}) => ({
+    ...state,
+    favoriteIsLoading: false,
+    favorites
+  })),
+  on(addFavorite, (state, {favorite}) => ({
+    ...state,
+    favorites: [...state.favorites, favorite]
+  })),
+  on(removeFavorite, (state, {postId}) => ({
+    ...state,
+    favorites: state.favorites.filter(f => postId !== postId)
+  })),
+  on(addRemoveOperationStatus, (state, {status}) => ({
+    ...state,
+    isLoading: false,
+    favoriteOperationStatus: status
   }))
 );

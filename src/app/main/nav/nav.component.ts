@@ -1,6 +1,6 @@
 import { AsyncPipe, NgIf } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, RouterLinkActive } from '@angular/router';
 import { LoginSignupDialogComponent } from '../login-signup-dialog/login-signup-dialog.component';
 import { CreatePostDialogComponent } from '../create-post-dialog/create-post-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,6 +23,7 @@ import { IUser } from '../../models/user.vm';
     RouterLink,
     AsyncPipe,
     NgIf,
+    RouterLinkActive
   ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.scss',

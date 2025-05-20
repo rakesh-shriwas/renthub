@@ -26,10 +26,10 @@
     @if (loggedInUserDetails?.role === userRoles.Renters) {
 
     <button mat-fab class="fav-btn" (click)="toggleFavorite.emit(post.id)">
-      <mat-icon> favorite </mat-icon>
-      <!-- <mat-icon>{{
+      <!-- <mat-icon> favorite </mat-icon> -->
+      <mat-icon>{{
         post.isFavorite ? "favorite" : "favorite_border"
-      }}</mat-icon> -->
+      }}</mat-icon>
     </button>
     }
   </mat-card-actions>

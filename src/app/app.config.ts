@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(),
-    provideStore({ posts: postReducer, comments: postReducer }),
+    provideStore({ renthub: postReducer }),
     provideEffects([PostEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: env.production }),
   ],

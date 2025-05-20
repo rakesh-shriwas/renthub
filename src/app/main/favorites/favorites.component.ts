@@ -1,47 +1,47 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FavoritesComponentStore } from './favorites.store';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, Subject, takeUntil } from 'rxjs';
+import { combineLatest, Observable, Subject, take, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { IPostResponse } from '../../models/post.vm';
-import { selectPosts } from '../../store/renthub.selectors';
+import { selectFavorites, selectOperationStatus, selectPosts } from '../../store/renthub.selectors';
 import { IFavoritesResponse } from '../../models/favorites.vm';
-import { loadPosts } from '../../store/renthub.action';
+import {
+  addFavorite,
+  loadFavorites,
+  loadPosts,
+  removeFavorite,
+} from '../../store/renthub.action';
 import { PostCardComponent } from '../post-card/post-card.component';
 import { NotRecordFoundComponent } from '../not-record-found/not-record-found.component';
 import { CommonService } from '../../services/common.service';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-favorites',
   imports: [PostCardComponent, NotRecordFoundComponent],
   templateUrl: './favorites.component.html',
   styleUrl: './favorites.component.scss',
-  providers: [FavoritesComponentStore, AsyncPipe],
 })
 export class FavoritesComponent implements OnInit {
-  private componentStore = inject(FavoritesComponentStore);
   private store = inject(Store);
   private service = inject(CommonService);
-  loggedInUser = signal<any>(null);
-
   private destroy$ = new Subject<void>();
-  router = inject(Router);
+  private router = inject(Router);
+  loggedInUser = signal<any>(null);
 
   favoritesPostList = signal<IPostResponse[]>([]);
 
   posts$: Observable<IPostResponse[]> = this.store.select(selectPosts);
-
+  operationStatus$: Observable<boolean> = this.store.select(selectOperationStatus);
   favorites$: Observable<IFavoritesResponse[]> =
-    this.componentStore.selectFavorites$;
-  isLoading$: Observable<boolean> = this.componentStore.selectIsLoading$;
+    this.store.select(selectFavorites);
 
   ngOnInit(): void {
     this.store.dispatch(loadPosts());
     this.service.getAuthenticateUser().subscribe((res) => {
       if (res) {
         this.loggedInUser.set(res);
-        this.componentStore.loadFavorites({ userId: res?.id });
+        // this.componentStore.loadFavorites({ userId: res?.id });
+        this.store.dispatch(loadFavorites({ userId: res?.id }));
       }
     });
     combineLatest([this.favorites$, this.posts$])
@@ -62,7 +62,12 @@ export class FavoritesComponent implements OnInit {
             isFavorite: favoritePostIds.has(data.id),
           }));
           this.favoritesPostList.set(favoritePostData);
+          console.log('this.favoritesPostList', this.favoritesPostList());
         }
+      });
+      this.operationStatus$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
+        this.store.dispatch(loadPosts());
+        this.store.dispatch(loadFavorites({ userId: this.loggedInUser()?.id }));
       });
   }
 
@@ -70,9 +75,23 @@ export class FavoritesComponent implements OnInit {
     this.router.navigate(['/app', 'my', 'post', id]);
   }
 
-  onFavoriteChange(postId: number): void {
-    console.log('Fav::', event);
-    // this.componentStore.favoriteChange({postId, userId: 1})
+  onFavoriteChange(postId: any): void {
+    this.store
+      .select(selectFavorites)
+      .pipe(take(1))
+      .subscribe((favorites) => {
+        const isFav = favorites.some((fav) => fav.postId === postId);
+
+        if (isFav) {
+          this.store.dispatch(removeFavorite({ postId }));
+        } else {
+          this.store.dispatch(
+            addFavorite({
+              favorite: { postId, userId: this.loggedInUser()?.id },
+            })
+          );
+        }
+      });
   }
 
   ngOnDestroy(): void {

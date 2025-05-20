@@ -76,6 +76,13 @@ export class CommonService {
     );
   }
 
+  addFavorite(obj: any): Observable<IFavoritesResponse[]> {
+    return this.http.post<IFavoritesResponse[]>(`${this.apiUrl}/favorites`, obj)
+  }
+  removeFavorite(postId: any): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/favorites/${postId}`)
+  }
+
   /**
    * Get post comments by post id
    *

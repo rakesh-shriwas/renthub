@@ -24,7 +24,7 @@
   </button>
   }
   <ng-container *ngIf="loggedInUserDetails$ | async as loggedInUserDetails">
-    <button mat-button [routerLink]="['/app']">Home</button>
+    <button mat-button [routerLink]="['/app']" routerLinkActive="active">Home</button>
     @if (loggedInUserDetails.role === userRoles.Landlords) {
     <button
       mat-button
@@ -33,12 +33,12 @@
     >
       Create New Post
     </button>
-    <button mat-button [routerLink]="['/app', 'my', 'posts']">
+    <button mat-button [routerLink]="['/app', 'my', 'posts']" routerLinkActive="active">
       <mat-icon>format_list_bulleted</mat-icon>
       <span>Post List</span>
     </button>
     } @if (loggedInUserDetails.role === userRoles.Renters) {
-    <button mat-button [routerLink]="['/app', 'my', 'fav']">
+    <button mat-button [routerLink]="['/app', 'my', 'fav']" routerLinkActive="active">
       <mat-icon>favorite</mat-icon>
       <span>My Favorite</span>
     </button>

@@ -14,6 +14,7 @@ export interface IPostRequest {
   priceMode: string;
   stayType: string;
   images: string[];
+  isFavorite?: boolean;
 }
 
 export interface IPostResponse extends IPostRequest {
