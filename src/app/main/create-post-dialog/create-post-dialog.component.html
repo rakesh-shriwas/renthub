@@ -157,7 +157,8 @@
         }
       </div>
       <mat-checkbox formControlName="rentNegotiable">Negotiable</mat-checkbox>
-      @if ( createPostForm.get('rentNegotiable')?.touched && createPostForm.get('rentNegotiable')?.hasError('required')) {
+      @if ( createPostForm.get('rentNegotiable')?.touched &&
+      createPostForm.get('rentNegotiable')?.hasError('required')) {
       <mat-error>Field is required</mat-error>
       }
     </div>
@@ -171,15 +172,20 @@
         <mat-radio-button [value]="false">No</mat-radio-button>
       </mat-radio-group>
       @if ( createPostForm.get('apartmentFurnished')?.hasError('required')) {
-        <mat-error>Field is required</mat-error>
-        }
+      <mat-error>Field is required</mat-error>
+      }
     </div>
 
     <h4>Amenities included</h4>
-    <div class="amenities-section">
-      @for (amenity of amenitiesList; track $index) {
+    <div>
+      <!-- @for (amenity of amenitiesList; track $index) {
         <mat-checkbox [checked]="isChecked(amenity)" (change)="onCheckboxChange($event)" [value]="amenity">{{ amenity }}</mat-checkbox>
-      }
+      } -->
+      <div formArrayName="amenities" class="amenities-section">
+        <div *ngFor="let amenity of availableAmenities; let i = index">
+          <mat-checkbox [formControlName]="i">{{ amenity }}</mat-checkbox>
+        </div>
+      </div>
     </div>
     <!-- <h4>Gallery</h4> -->
   </form>
@@ -187,6 +193,6 @@
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
   <button mat-flat-button (click)="createNewPost()">
-    {{ data ? 'Update' : 'Create' }}
+    {{ data ? "Update" : "Create" }}
   </button>
 </mat-dialog-actions>

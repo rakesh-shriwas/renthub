@@ -21,3 +21,9 @@ export const createPostFailure = createAction(
   '[Post] Create New Post Failure',
   props<{ error: string }>()
 );
+
+export const updateExistingPost = createAction(
+  '[Post] Create New Post',
+  props<{ payload: any; postId: number }>()
+);
+export const updateExistingPostSuccess = createAction('[Post] Create New Post', props<{status: boolean}>());

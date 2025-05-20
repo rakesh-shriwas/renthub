@@ -7,6 +7,8 @@ import {
   createPostSuccess,
   loadPosts,
   loadPostSuccess,
+  updateExistingPost,
+  updateExistingPostSuccess,
 } from './renthub.action';
 import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
 import { IPostResponse } from '../models/post.vm';
@@ -41,6 +43,17 @@ export class PostEffects {
       switchMap(({payload}) =>
         this.service.createPost(payload).pipe(
           map((post) => createPostSuccess({post})),
+          catchError((error) => of(createPostFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+  updateExistingPost$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateExistingPost),
+      switchMap(({payload, postId}) =>
+        this.service.updatePostById(postId, payload).pipe(
+          map((res) => updateExistingPostSuccess({status: true})),
           catchError((error) => of(createPostFailure({ error: error.message })))
         )
       )

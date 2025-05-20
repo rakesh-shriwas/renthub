@@ -6,6 +6,7 @@ export const selectRentPostState = createFeatureSelector<RentHubState>('posts');
 export const selectPosts = createSelector(selectRentPostState, state => state.posts);
 export const selectIsLoading = createSelector(selectRentPostState, state => state.isLoading);
 export const selectCreatePostSuccess = createSelector(selectRentPostState, state => state.createPostSuccess);
+export const selectUpdateExistingPostSuccess = createSelector(selectRentPostState, state => state.updateExistingPostSuccess);
 
 /** Comments Selectors */
 // export const selectCommentsState = createFeatureSelector<RentHubState>('comments');

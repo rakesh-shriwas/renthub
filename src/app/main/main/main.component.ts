@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CommonService } from '../../services/common.service';
 import { IPostResponse } from '../../models/post.vm';
-import { selectPosts } from '../../store/renthub.selectors';
+import { selectPosts, selectUpdateExistingPostSuccess } from '../../store/renthub.selectors';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { loadPosts } from '../../store/renthub.action';
 import { CreatePostDialogComponent } from '../create-post-dialog/create-post-dialog.component';
@@ -30,6 +30,7 @@ export class MainComponent {
 
   /** Store Post Data */
   posts$: Observable<IPostResponse[]> = this.store.select(selectPosts);
+  updateExistingPostSuccess$: Observable<any> = this.store.select(selectUpdateExistingPostSuccess);
 
   ngOnInit(): void {
     this.store.dispatch(loadPosts());
@@ -40,9 +41,15 @@ export class MainComponent {
       }
     });
     this.posts$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
+      this.myPostList.set([]);
       if (res?.length) {
         // const filterData = res.filter((post) => post.userId === +this.userId);
         this.myPostList.set(res);
+      }
+    });
+    this.updateExistingPostSuccess$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
+      if (res) {
+        this.store.dispatch(loadPosts());
       }
     });
   }
@@ -52,10 +59,16 @@ export class MainComponent {
   }
 
   editPost(post: IPostResponse): void {
-    this.dialog.open(CreatePostDialogComponent, {
+    const dialogRef = this.dialog.open(CreatePostDialogComponent, {
       maxWidth: '950px',
       autoFocus: false,
       data: post,
+    });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res) {
+        this.store.dispatch(loadPosts());
+      }
     });
   }
 

@@ -60,7 +60,7 @@ export class CommonService {
     postId: number,
     postObj: IPostRequest
   ): Observable<IPostResponse> {
-    return this.http.put<IPostResponse>(`${this.apiUrl}/${postId}`, postObj);
+    return this.http.patch<IPostResponse>(`${this.apiUrl}/posts/${postId}`, postObj);
   }
 
   /**

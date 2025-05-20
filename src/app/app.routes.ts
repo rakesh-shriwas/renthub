@@ -25,6 +25,14 @@ export const routes: Routes = [
             (m) => m.MypostsComponent
           ),
       },
+      
+      {
+        path: 'post/:id',
+        loadComponent: () =>
+          import('./main/post-details/post-details.component').then(
+            (m) => m.PostDetailsComponent
+          ),
+      },
       {
         path: 'my/posts/:id',
         loadComponent: () =>

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -17,29 +17,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
-import { createPost, loadPosts } from '../../store/renthub.action';
+import { createPost, loadPosts, updateExistingPost } from '../../store/renthub.action';
 import { selectCreatePostSuccess } from '../../store/renthub.selectors';
 import { CommonService } from '../../services/common.service';
-
-interface ICreatePostForm {
-  title: FormControl<string | null>;
-  description: FormControl<string | null>;
-  apartmentType: FormControl<string | null>;
-  name: FormControl<string | null>;
-  sharedProperty: FormControl<boolean | null>;
-  location: FormControl<string | null>;
-  squareFit: FormControl<string | null>;
-  stayType: FormControl<string | null>;
-  rent: FormControl<string | null>;
-  priceMode: FormControl<string | null>;
-  rentNegotiable: FormControl<boolean | null>;
-  apartmentFurnished: FormControl<boolean | null>;
-  amenities: FormArray<FormControl<string>>;
-}
 
 @Component({
   selector: 'app-create-post',
@@ -54,11 +38,13 @@ interface ICreatePostForm {
     ReactiveFormsModule,
     MatIconModule,
     NgIf,
+    NgFor,
   ],
   templateUrl: './create-post-dialog.component.html',
   styleUrl: './create-post-dialog.component.scss',
 })
-export class CreatePostDialogComponent implements OnInit {
+export class CreatePostDialogComponent implements OnInit, OnDestroy{
+ 
   private store = inject(Store);
   private service = inject(CommonService);
   readonly dialogRef = inject(MatDialogRef<CreatePostDialogComponent>);
@@ -85,7 +71,7 @@ export class CreatePostDialogComponent implements OnInit {
     amenities: FormArray<FormControl<string>>;
   }>;
   selectedAmenities: string[] = [];
-  amenitiesList: string[] = [
+  availableAmenities: string[] = [
     'Gym/Fitness Center',
     'Swimming Pool',
     'Card Park',
@@ -103,22 +89,22 @@ export class CreatePostDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.addCheckboxes();
     this.createPostSuccess$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res) {
-        this.dialogRef.close();
-        this.store.dispatch(loadPosts());
+        this.dialogRef.close(res);
+        // this.store.dispatch(loadPosts());
       }
     });
 
     if (this.data) {
       this.createPostForm.patchValue(this.data);
       this.selectedAmenities = this.data.amenities;
+      if (this.data?.amenities?.length) {
+        this.setEditData(this.data.amenities);
+      }
     }
-
-    this.amenitiesList.forEach((aminity) => {
-      this.addAmenity(aminity);
-    });
-    this.service.getAuthenticateUser().subscribe((res) => {
+    this.service.getAuthenticateUser().pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res) {
         this.userId = res?.id;
       }
@@ -146,48 +132,68 @@ export class CreatePostDialogComponent implements OnInit {
     });
   }
 
+  get amenitiesFormArray(): FormArray {
+    return this.createPostForm.get('amenities') as FormArray;
+  }
+
+  // Initialize checkboxes (add all unchecked initially)
+  private addCheckboxes() {
+    this.availableAmenities.forEach(() =>
+      this.amenitiesFormArray.push(new FormControl(false))
+    );
+  }
+
+  // Get selected amenities as string array
+  getSelectedAmenities(): string[] {
+    return this.amenitiesFormArray.value
+      .map((checked: boolean, i: number) =>
+        checked ? this.availableAmenities[i] : null
+      )
+      .filter((v: string | null) => v !== null) as string[];
+  }
   createNewPost(): void {
     const formValue = this.createPostForm.value;
-    console.log(this.selectedAmenitiesList);
+    const selectedAmenities = this.getSelectedAmenities();
     if (this.createPostForm.valid) {
-      this.store.dispatch(
-        createPost({
-          payload: {
-            ...formValue,
-            userId: this.userId,
-            images: [],
-            amenities: this.selectedAmenitiesList,
-          },
-        })
-      );
+      if(!this.data){
+        this.store.dispatch(
+          createPost({
+            payload: {
+              ...formValue,
+              userId: this.userId,
+              images: [],
+              amenities: selectedAmenities,
+            },
+          })
+        );
+      }else {
+        this.store.dispatch(
+          updateExistingPost({
+            payload: {
+              ...formValue,
+              userId: this.userId,
+              images: [],
+              amenities: selectedAmenities,
+            },
+            postId: this.data?.id
+          })
+        );
+      }
     } else {
       this.createPostForm.markAllAsTouched();
     }
   }
 
-  onCheckboxChange(event: any) {
-    const checked = event.checked;
-    const value = event.source.value;
-
-    if (checked) {
-      this.selectedAmenitiesList.push(value);
-    } else {
-      const index = this.amenities.controls.findIndex((x) => x.value === value);
-      if (index !== -1) {
-        this.selectedAmenitiesList.splice(index, 1);
-      }
-    }
+  setEditData(selectedAmenities: string[]) {
+    this.amenitiesFormArray.controls.forEach((control, index) => {
+      control.setValue(
+        selectedAmenities.includes(this.availableAmenities[index])
+      );
+    });
   }
-
-  addAmenity(value: string) {
-    this.amenities.push(new FormControl(value));
-  }
-
-  get amenities() {
-    return this.createPostForm.get('amenities') as FormArray;
-  }
-
-  isChecked(value: string): boolean {
-    return this.selectedAmenitiesList.includes(value);
+  
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

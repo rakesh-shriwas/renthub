@@ -5,6 +5,8 @@ import {
   createPostSuccess,
   loadPosts,
   loadPostSuccess,
+  updateExistingPost,
+  updateExistingPostSuccess,
 } from './renthub.action';
 import { IPostResponse } from '../models/post.vm';
 
@@ -15,6 +17,7 @@ export interface RentHubState {
   // comments: IComments[];
   error: string | null;
   createPostSuccess: boolean;
+  updateExistingPostSuccess: boolean;
 }
 
 /** Initial State with default value of  Post */
@@ -24,6 +27,7 @@ export const initialState: RentHubState = {
   // comments: [],
   error: null,
   createPostSuccess: false,
+  updateExistingPostSuccess: false,
 };
 
 /** Post Reducer Creation */
@@ -55,5 +59,15 @@ export const postReducer = createReducer(
     posts: [],
     isLoading: false,
     error,
+  })),
+  on(updateExistingPost, (state) => ({
+    ...state,
+    isLoading: true,
+    updateExistingPostSuccess: false,
+  })),
+  on(updateExistingPostSuccess, (state) => ({
+    ...state,
+    isLoading: false,
+    updateExistingPostSuccess: true,
   }))
 );
