@@ -6,7 +6,7 @@ import { CommonService } from '../../services/common.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { IPostResponse } from '../../models/post.vm';
 import { selectPosts } from '../../store/renthub.selectors';
-import { loadPosts } from '../../store/renthub.action';
+import { loadPosts, loadPostsByUserId } from '../../store/renthub.action';
 import { CreatePostDialogComponent } from '../create-post-dialog/create-post-dialog.component';
 import { PostCardComponent } from '../post-card/post-card.component';
 import { NotRecordFoundComponent } from '../not-record-found/not-record-found.component';
@@ -32,11 +32,11 @@ export class MypostsComponent implements OnInit {
   posts$: Observable<IPostResponse[]> = this.store.select(selectPosts);
 
   ngOnInit(): void {
-    this.store.dispatch(loadPosts());
     this.service.getAuthenticateUser().subscribe((res) => {
       if (res) {
         this.loggedInUserDetails.set(res);
         this.userId = res?.id;
+        this.store.dispatch(loadPostsByUserId({userId: res?.id}));
       }
     });
     this.posts$.pipe(takeUntil(this.destroy$)).subscribe((res) => {

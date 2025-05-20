@@ -11,6 +11,8 @@ import {
   loadFavoritesFailure,
   loadFavoritesSuccess,
   loadPosts,
+  loadPostsByUserId,
+  loadPostsByUserIdSuccess,
   loadPostSuccess,
   removeFavorite,
   updateExistingPost,
@@ -38,6 +40,19 @@ export class PostEffects {
         this.service.getPosts().pipe(
           map((posts: IPostResponse[]) => {
             return loadPostSuccess({ posts });
+          })
+        )
+      )
+    )
+  );
+
+  loadPostByUserId$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadPostsByUserId),
+      mergeMap(({ userId }) =>
+        this.service.getPostByUserId(userId).pipe(
+          map((posts: IPostResponse[]) => {
+            return loadPostsByUserIdSuccess({posts});
           })
         )
       )
@@ -86,7 +101,7 @@ export class PostEffects {
       ofType(addFavorite),
       mergeMap(({ favorite }) =>
         this.service.addFavorite(favorite).pipe(
-          map(() => (addRemoveOperationStatus({status: true}))),
+          map(() => addRemoveOperationStatus({ status: true })),
           catchError(() => of({ type: '[Favorite] Add Failed' }))
         )
       )
@@ -98,7 +113,7 @@ export class PostEffects {
       ofType(removeFavorite),
       mergeMap(({ postId }) =>
         this.service.removeFavorite(postId).pipe(
-          map(() => (addRemoveOperationStatus({status: true}))),
+          map(() => addRemoveOperationStatus({ status: true })),
           catchError(() => of({ type: '[Favorite] Remove Failed' }))
         )
       )

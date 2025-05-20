@@ -25,6 +25,17 @@ export class CommonService {
   getPosts(): Observable<IPostResponse[]> {
     return this.http.get<IPostResponse[]>(`${this.apiUrl}/posts`);
   }
+  
+  /**
+   * Get post list by user id
+   *
+   * @param {number} userId
+   * @return {*}  {Observable<IPostResponse>}
+   * @memberof CommonService
+   */
+  getPostByUserId(userId: number): Observable<IPostResponse[]> {
+    return this.http.get<IPostResponse[]>(`${this.apiUrl}/posts?userId=${userId}`)
+  }
 
   /**
    * Get Post by id

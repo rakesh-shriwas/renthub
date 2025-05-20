@@ -9,6 +9,15 @@ export const loadPostSuccess = createAction(
   props<{ posts: IPostResponse[] }>()
 );
 
+export const loadPostsByUserId = createAction(
+  '[Posts] Load Posts By UserId',
+  props<{ userId: number }>()
+);
+export const loadPostsByUserIdSuccess = createAction(
+  '[Posts] Load Posts By UserId Success',
+  props<{ posts: IPostResponse[] }>()
+);
+
 /** Create Post */
 export const createPost = createAction(
   '[Post] Create New Post',
@@ -39,11 +48,22 @@ export const loadFavorites = createAction(
   props<{ userId: number }>()
 );
 export const loadFavoritesSuccess = createAction(
-'[Favorite] Load Favorite Success', props<{favorites: IFavoritesResponse[]}>()
+  '[Favorite] Load Favorite Success',
+  props<{ favorites: IFavoritesResponse[] }>()
 );
 export const loadFavoritesFailure = createAction(
-'[Favorite] Load Favorite Failure',props<{ error: string }>()
+  '[Favorite] Load Favorite Failure',
+  props<{ error: string }>()
 );
-export const addFavorite = createAction('[Favorite] Add Favorite', props<{favorite: any}>());
-export const removeFavorite = createAction('[Favorite] Remove Favorite', props<{postId: number}>());
-export const addRemoveOperationStatus = createAction('[Favorite] Operation Status', props<{status: boolean}>());
+export const addFavorite = createAction(
+  '[Favorite] Add Favorite',
+  props<{ favorite: any }>()
+);
+export const removeFavorite = createAction(
+  '[Favorite] Remove Favorite',
+  props<{ postId: number }>()
+);
+export const addRemoveOperationStatus = createAction(
+  '[Favorite] Operation Status',
+  props<{ status: boolean }>()
+);

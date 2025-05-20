@@ -8,6 +8,8 @@ import {
   loadFavorites,
   loadFavoritesSuccess,
   loadPosts,
+  loadPostsByUserId,
+  loadPostsByUserIdSuccess,
   loadPostSuccess,
   removeFavorite,
   updateExistingPost,
@@ -39,7 +41,7 @@ export const initialState: RentHubState = {
   updateExistingPostSuccess: false,
   favorites: [],
   favoriteIsLoading: false,
-  favoriteOperationStatus: false
+  favoriteOperationStatus: false,
 };
 
 /** Post Reducer Creation */
@@ -54,6 +56,15 @@ export const postReducer = createReducer(
     ...state,
     posts,
     isLoading: false,
+  })),
+  on(loadPostsByUserId, (state) => ({
+    ...state,
+    isLoading: true,
+  })),
+  on(loadPostsByUserIdSuccess, (state, { posts }) => ({
+    ...state,
+    isLoading: false,
+    posts,
   })),
   on(createPost, (state) => ({
     ...state,
@@ -86,22 +97,22 @@ export const postReducer = createReducer(
     ...state,
     favoriteIsLoading: true,
   })),
-  on(loadFavoritesSuccess, (state, {favorites}) => ({
+  on(loadFavoritesSuccess, (state, { favorites }) => ({
     ...state,
     favoriteIsLoading: false,
-    favorites
+    favorites,
   })),
-  on(addFavorite, (state, {favorite}) => ({
+  on(addFavorite, (state, { favorite }) => ({
     ...state,
-    favorites: [...state.favorites, favorite]
+    favorites: [...state.favorites, favorite],
   })),
-  on(removeFavorite, (state, {postId}) => ({
+  on(removeFavorite, (state, { postId }) => ({
     ...state,
-    favorites: state.favorites.filter(f => postId !== postId)
+    favorites: state.favorites.filter((f) => postId !== postId),
   })),
-  on(addRemoveOperationStatus, (state, {status}) => ({
+  on(addRemoveOperationStatus, (state, { status }) => ({
     ...state,
     isLoading: false,
-    favoriteOperationStatus: status
+    favoriteOperationStatus: status,
   }))
 );

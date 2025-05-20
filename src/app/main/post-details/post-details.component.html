@@ -4,14 +4,20 @@
   </button>
   <h2>Post Details</h2>
 </div>
-
-<mat-card *ngIf="(postDetails$ | async)?.[0] as postDetails" class="post-details-card">
+@if (isLoading$ | async) {
+<p>Loading Data...</p>
+}
+<mat-card
+  *ngIf="(postDetails$ | async)?.[0] as postDetails"
+  class="post-details-card"
+>
   <mat-card-content>
-    
     <!-- Title and Property Type -->
     <div class="section">
       <h3>{{ postDetails?.title }}</h3>
-      <p class="property-type"><strong>Property Type:</strong> {{ postDetails?.apartmentType }}</p>
+      <p class="property-type">
+        <strong>Property Type:</strong> {{ postDetails?.apartmentType }}
+      </p>
     </div>
 
     <!-- Description -->
@@ -24,12 +30,27 @@
       <div><strong>Location:</strong> {{ postDetails.location }}</div>
       <div><strong>Owner:</strong> {{ postDetails.name }}</div>
       <div><strong>Area:</strong> {{ postDetails.squareFit }} sq ft</div>
-      <div><strong>Stay Type:</strong> {{ postDetails.stayType | titlecase }}</div>
-      <div><strong>Rent:</strong> {{ postDetails.rent | currency:'INR' }}</div>
-      <div><strong>Rent Negotiable:</strong> {{ postDetails.rentNegotiable ? "Yes" : "No" }}</div>
-      <div><strong>Price Mode:</strong> {{ postDetails.priceMode | titlecase }}</div>
-      <div><strong>Furnished:</strong> {{ postDetails.apartmentFurnished ? "Yes" : "No" }}</div>
-      <div><strong>Shared Property:</strong> {{ postDetails.sharedProperty ? "Yes" : "No" }}</div>
+      <div>
+        <strong>Stay Type:</strong> {{ postDetails.stayType | titlecase }}
+      </div>
+      <div>
+        <strong>Rent:</strong> {{ postDetails.rent | currency : "INR" }}
+      </div>
+      <div>
+        <strong>Rent Negotiable:</strong>
+        {{ postDetails.rentNegotiable ? "Yes" : "No" }}
+      </div>
+      <div>
+        <strong>Price Mode:</strong> {{ postDetails.priceMode | titlecase }}
+      </div>
+      <div>
+        <strong>Furnished:</strong>
+        {{ postDetails.apartmentFurnished ? "Yes" : "No" }}
+      </div>
+      <div>
+        <strong>Shared Property:</strong>
+        {{ postDetails.sharedProperty ? "Yes" : "No" }}
+      </div>
     </div>
 
     <mat-divider class="my-4"></mat-divider>
@@ -58,7 +79,6 @@
         }
       </div>
     </div>
-
   </mat-card-content>
 </mat-card>
 
