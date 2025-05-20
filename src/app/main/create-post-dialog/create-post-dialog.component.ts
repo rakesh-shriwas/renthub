@@ -24,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { createPost, loadPosts, updateExistingPost } from '../../store/renthub.action';
 import { selectCreatePostSuccess } from '../../store/renthub.selectors';
 import { CommonService } from '../../services/common.service';
+import { ImageUploadComponent } from '../image-upload/image-upload.component';
 
 @Component({
   selector: 'app-create-post',
@@ -39,6 +40,7 @@ import { CommonService } from '../../services/common.service';
     MatIconModule,
     NgIf,
     NgFor,
+    ImageUploadComponent
   ],
   templateUrl: './create-post-dialog.component.html',
   styleUrl: './create-post-dialog.component.scss',
