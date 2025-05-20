@@ -15,16 +15,18 @@
     </p>
     <div class="d-flex">
       <p class="card-description">
-        {{ post.rent | currency : "INR" }}/{{ post.priceMode | titlecase }} - [{{ post.location | titlecase }}]
+        {{ post.rent | currency : "INR" }}/{{ post.priceMode | titlecase }} -
+        [{{ post.location | titlecase }}]
       </p>
     </div>
   </mat-card-content>
   <mat-card-actions>
-    @if (loggedInUserDetails?.role === userRoles.Landlords) {
+    @if (loggedInUserDetails?.role === userRoles.Landlords) { @if (loggedInUserDetails.id ===  post.userId) {
+
     <button mat-button class="ml-auto" (click)="editPost.emit(post)">
       Edit Details
     </button>
-    }
+    } }
     <button mat-button class="ml-auto" (click)="viewPostDetails.emit(post.id)">
       View Details
     </button>
