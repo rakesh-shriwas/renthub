@@ -5,15 +5,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CommonService } from '../../services/common.service';
 import { IPostResponse } from '../../models/post.vm';
-import { selectPosts, selectUpdateExistingPostSuccess } from '../../store/renthub.selectors';
+import { selectFeaturedPostsState, selectPosts, selectUpdateExistingPostSuccess } from '../../store/renthub.selectors';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { loadPosts } from '../../store/renthub.action';
+import { loadFeaturedPosts, loadPosts } from '../../store/renthub.action';
 import { CreatePostDialogComponent } from '../create-post-dialog/create-post-dialog.component';
 import { NotRecordFoundComponent } from '../not-record-found/not-record-found.component';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-main',
-  imports: [PostCardComponent, NotRecordFoundComponent],
+  imports: [PostCardComponent, NotRecordFoundComponent, AsyncPipe, JsonPipe],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
@@ -30,10 +31,12 @@ export class MainComponent {
 
   /** Store Post Data */
   posts$: Observable<IPostResponse[]> = this.store.select(selectPosts);
+  featuredPostsState$: Observable<IPostResponse[]> = this.store.select(selectFeaturedPostsState);
   updateExistingPostSuccess$: Observable<any> = this.store.select(selectUpdateExistingPostSuccess);
 
   ngOnInit(): void {
     this.store.dispatch(loadPosts());
+    this.store.dispatch(loadFeaturedPosts());
     this.service.getAuthenticateUser().subscribe((res) => {
       if (res) {
         this.loggedInUserDetails.set(res);

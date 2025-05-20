@@ -21,8 +21,9 @@ export const selectUpdateExistingPostSuccess = createSelector(
   (state) => state.updateExistingPostSuccess
 );
 
+export const selectFeaturedPostsState = createSelector(selectRentPostState, (state) => state.featuredPosts)
+
 /** Favorites */
-// export const selectFavoritesState = createFeatureSelector<RentHubState>('favorites');
 export const selectFavorites = createSelector(
   selectRentPostState,
   (state) => state.favorites

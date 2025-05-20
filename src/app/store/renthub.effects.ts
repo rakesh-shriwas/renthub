@@ -10,6 +10,8 @@ import {
   loadFavorites,
   loadFavoritesFailure,
   loadFavoritesSuccess,
+  loadFeaturedPosts,
+  loadFeaturedPostsSuccess,
   loadPosts,
   loadPostsByUserId,
   loadPostsByUserIdSuccess,
@@ -46,13 +48,26 @@ export class PostEffects {
     )
   );
 
+  loadFeaturedPost$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadFeaturedPosts),
+      mergeMap(() =>
+        this.service.getFeaturedPosts().pipe(
+          map((featuredPosts: IPostResponse[]) => {
+            return loadFeaturedPostsSuccess({ featuredPosts });
+          })
+        )
+      )
+    )
+  );
+
   loadPostByUserId$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadPostsByUserId),
       mergeMap(({ userId }) =>
         this.service.getPostByUserId(userId).pipe(
           map((posts: IPostResponse[]) => {
-            return loadPostsByUserIdSuccess({posts});
+            return loadPostsByUserIdSuccess({ posts });
           })
         )
       )

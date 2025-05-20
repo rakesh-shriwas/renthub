@@ -8,6 +8,8 @@ export const loadPostSuccess = createAction(
   '[Posts] Load Posts Success',
   props<{ posts: IPostResponse[] }>()
 );
+export const loadFeaturedPosts = createAction('[Posts] Load Featured Posts');
+export const loadFeaturedPostsSuccess = createAction('[Posts] Load Feature Posts Success', props<{featuredPosts: IPostResponse[]}>());
 
 export const loadPostsByUserId = createAction(
   '[Posts] Load Posts By UserId',

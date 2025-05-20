@@ -1,3 +1,5 @@
+
+{{featuredPostsState$ | async | json}}
 <div class="card-container">
     @for (post of myPostList(); track post.id) {
         <app-post-card (viewPostDetails)="viewDetails($event)" (editPost)="editPost($event)" [post]="post" [loggedInUserDetails]="loggedInUserDetails()"></app-post-card>

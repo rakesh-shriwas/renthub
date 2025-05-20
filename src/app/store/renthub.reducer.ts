@@ -7,6 +7,8 @@ import {
   createPostSuccess,
   loadFavorites,
   loadFavoritesSuccess,
+  loadFeaturedPosts,
+  loadFeaturedPostsSuccess,
   loadPosts,
   loadPostsByUserId,
   loadPostsByUserIdSuccess,
@@ -21,6 +23,7 @@ import { IFavoritesResponse } from '../models/favorites.vm';
 /** State interface of  Post */
 export interface RentHubState {
   posts: IPostResponse[];
+  featuredPosts: IPostResponse[];
   isLoading: boolean;
   // comments: IComments[];
   error: string | null;
@@ -34,6 +37,7 @@ export interface RentHubState {
 /** Initial State with default value of  Post */
 export const initialState: RentHubState = {
   posts: [],
+  featuredPosts: [],
   isLoading: false,
   // comments: [],
   error: null,
@@ -56,6 +60,17 @@ export const postReducer = createReducer(
     ...state,
     posts,
     isLoading: false,
+  })),
+  on(loadFeaturedPosts, (state) => ({
+    ...state,
+    isLoading: true,
+    // featuredPosts: state.posts.filter((post) => post.featured),
+  })),
+  on(loadFeaturedPostsSuccess, (state, { featuredPosts }) => ({
+    ...state,
+    isLoading: true,
+    // featuredPosts: state.posts.filter((post) => post.featured),
+    featuredPosts
   })),
   on(loadPostsByUserId, (state) => ({
     ...state,

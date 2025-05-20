@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { env } from '../../environments/environment';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { IPostRequest, IPostResponse } from '../models/post.vm';
 import { IFavoritesResponse } from '../models/favorites.vm';
 import { ICommentRequest, ICommentResponse } from '../models/comment.vm';
@@ -27,6 +27,18 @@ export class CommonService {
   }
   
   /**
+   * Get Featured post List
+   *
+   * @return {*}  {Observable<IPostResponse[]>}
+   * @memberof CommonService
+   */
+  getFeaturedPosts(): Observable<IPostResponse[]> {
+    return this.http
+      .get<IPostResponse[]>(`${this.apiUrl}/posts`)
+      .pipe(map((posts) => posts.filter((post) => post.featured)));
+  }
+
+  /**
    * Get post list by user id
    *
    * @param {number} userId
@@ -34,7 +46,9 @@ export class CommonService {
    * @memberof CommonService
    */
   getPostByUserId(userId: number): Observable<IPostResponse[]> {
-    return this.http.get<IPostResponse[]>(`${this.apiUrl}/posts?userId=${userId}`)
+    return this.http.get<IPostResponse[]>(
+      `${this.apiUrl}/posts?userId=${userId}`
+    );
   }
 
   /**
@@ -71,7 +85,10 @@ export class CommonService {
     postId: number,
     postObj: IPostRequest
   ): Observable<IPostResponse> {
-    return this.http.patch<IPostResponse>(`${this.apiUrl}/posts/${postId}`, postObj);
+    return this.http.patch<IPostResponse>(
+      `${this.apiUrl}/posts/${postId}`,
+      postObj
+    );
   }
 
   /**
@@ -88,10 +105,13 @@ export class CommonService {
   }
 
   addFavorite(obj: any): Observable<IFavoritesResponse[]> {
-    return this.http.post<IFavoritesResponse[]>(`${this.apiUrl}/favorites`, obj)
+    return this.http.post<IFavoritesResponse[]>(
+      `${this.apiUrl}/favorites`,
+      obj
+    );
   }
   removeFavorite(postId: any): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/favorites/${postId}`)
+    return this.http.delete<any>(`${this.apiUrl}/favorites/${postId}`);
   }
 
   /**
@@ -128,7 +148,14 @@ export class CommonService {
    * @return {*}  {Observable<ISignUpResponse>}
    * @memberof CommonService
    */
-  createUser(userObj: Partial<{ name?: string | null | undefined; email: string | null; password: string | null; role: string | null; }>): Observable<ISignUpResponse> {
+  createUser(
+    userObj: Partial<{
+      name?: string | null | undefined;
+      email: string | null;
+      password: string | null;
+      role: string | null;
+    }>
+  ): Observable<ISignUpResponse> {
     return this.http.post<ISignUpResponse>(`${this.apiUrl}/users`, userObj);
   }
 
