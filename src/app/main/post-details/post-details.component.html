@@ -2,7 +2,7 @@
   <button mat-icon-button (click)="goBack()" aria-label="Go Back">
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <h2>Post Details</h2>
+  <h2>Post Details</h2><span class="fw-none" style="color: green;font-weight: 500;">{{(postDetails$ | async)?.[0]?.featured ? '( Featured Post )' : ''}}</span>
 </div>
 @if (isLoading$ | async) {
 <p>Loading Data...</p>

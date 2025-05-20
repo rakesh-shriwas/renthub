@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Create Post</h2>
 <mat-dialog-content class="mat-typography">
-  <h4>Description</h4>
   <form [formGroup]="createPostForm">
+    <mat-slide-toggle class="mb-2" labelPosition="before" formControlName="featured"><strong>Featured Post</strong></mat-slide-toggle>
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Title</mat-label>
       <input

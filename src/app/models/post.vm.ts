@@ -15,6 +15,7 @@ export interface IPostRequest {
   stayType: string;
   images: string[];
   isFavorite?: boolean;
+  featured: boolean;
 }
 
 export interface IPostResponse extends IPostRequest {

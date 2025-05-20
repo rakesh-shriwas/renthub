@@ -4,6 +4,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -37,6 +38,7 @@ import { CommonService } from '../../services/common.service';
     MatButtonModule,
     ReactiveFormsModule,
     MatIconModule,
+    MatSlideToggleModule,
     NgIf,
     NgFor,
   ],
@@ -68,6 +70,7 @@ export class CreatePostDialogComponent implements OnInit, OnDestroy{
     priceMode: FormControl<string | null>;
     rentNegotiable: FormControl<boolean | null>;
     apartmentFurnished: FormControl<boolean | null>;
+    featured: FormControl<boolean | null>
     amenities: FormArray<FormControl<string>>;
   }>;
   selectedAmenities: string[] = [];
@@ -128,6 +131,7 @@ export class CreatePostDialogComponent implements OnInit, OnDestroy{
       priceMode: new FormControl('monthly', [Validators.required]),
       rentNegotiable: new FormControl(false),
       apartmentFurnished: new FormControl(true, [Validators.required]),
+      featured: new FormControl(true),
       amenities: new FormArray<FormControl<string>>([]),
     });
   }
