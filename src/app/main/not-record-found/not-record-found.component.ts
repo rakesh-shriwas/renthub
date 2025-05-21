@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
@@ -8,5 +8,5 @@ import { MatCardModule } from '@angular/material/card';
   styleUrl: './not-record-found.component.scss'
 })
 export class NotRecordFoundComponent {
-
+  @Input() title: string = '';
 }

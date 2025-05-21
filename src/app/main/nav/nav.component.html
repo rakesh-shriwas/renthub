@@ -46,7 +46,8 @@
 
     <button mat-button [matMenuTriggerFor]="profileMenu">
       <mat-icon>account_circle</mat-icon>
-      {{ loggedInUserDetails.name }}
+      <span>{{loggedInUserDetails.role === userRoles.Renters ? 'User' : 'Landlord' | titlecase}}</span> : {{ loggedInUserDetails.name }}
+      
     </button>
     <mat-menu #profileMenu="matMenu">
       <button mat-menu-item (click)="logOut()">

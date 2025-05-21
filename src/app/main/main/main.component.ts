@@ -10,11 +10,11 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { loadFeaturedPosts, loadPosts } from '../../store/renthub.action';
 import { CreatePostDialogComponent } from '../create-post-dialog/create-post-dialog.component';
 import { NotRecordFoundComponent } from '../not-record-found/not-record-found.component';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-main',
-  imports: [PostCardComponent, NotRecordFoundComponent, AsyncPipe, JsonPipe],
+  imports: [PostCardComponent, NotRecordFoundComponent, AsyncPipe],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })

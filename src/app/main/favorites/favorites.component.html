@@ -6,7 +6,8 @@
     [post]="favoritePost"
     [loggedInUserDetails]="loggedInUser()"
   ></app-post-card>
-  }@empty {
-  <app-not-record-found class="no-record"></app-not-record-found>
   }
 </div>
+@if(favoritesPostList().length === 0) {
+<app-not-record-found class="no-record" [title]="'favorites'"></app-not-record-found>
+}

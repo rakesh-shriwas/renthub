@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgIf, TitleCasePipe } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink, Router, RouterLinkActive } from '@angular/router';
 import { LoginSignupDialogComponent } from '../login-signup-dialog/login-signup-dialog.component';
@@ -23,7 +23,8 @@ import { IUser } from '../../models/user.vm';
     RouterLink,
     AsyncPipe,
     NgIf,
-    RouterLinkActive
+    RouterLinkActive,
+    TitleCasePipe
   ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.scss',

@@ -23,11 +23,11 @@
   <mat-card-actions>
     @if (loggedInUserDetails?.role === userRoles.Landlords) { @if (loggedInUserDetails.id ===  post.userId) {
 
-    <button mat-button class="ml-auto" (click)="editPost.emit(post)">
+    <button mat-raised-button class="ml-auto" (click)="editPost.emit(post)">
       Edit Details
     </button>
     } }
-    <button mat-button class="ml-auto" (click)="viewPostDetails.emit(post.id)">
+    <button mat-raised-button class="ml-auto" (click)="viewPostDetails.emit(post.id)">
       View Details
     </button>
     @if (loggedInUserDetails?.role === userRoles.Renters) {

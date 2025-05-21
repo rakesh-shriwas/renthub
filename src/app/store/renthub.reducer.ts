@@ -58,19 +58,17 @@ export const postReducer = createReducer(
   })),
   on(loadPostSuccess, (state, { posts }) => ({
     ...state,
-    posts,
+    posts: posts.filter((post) => !post.featured),
     isLoading: false,
   })),
   on(loadFeaturedPosts, (state) => ({
     ...state,
     isLoading: true,
-    // featuredPosts: state.posts.filter((post) => post.featured),
   })),
   on(loadFeaturedPostsSuccess, (state, { featuredPosts }) => ({
     ...state,
     isLoading: true,
-    // featuredPosts: state.posts.filter((post) => post.featured),
-    featuredPosts
+    featuredPosts: featuredPosts.filter((post) => post.featured)
   })),
   on(loadPostsByUserId, (state) => ({
     ...state,
