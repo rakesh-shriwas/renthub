@@ -21,7 +21,7 @@ export const loadPostsByUserIdSuccess = createAction(
 );
 
 /** Create Post */
-export const createPost = createAction(
+export const createNewPost = createAction(
   '[Post] Create New Post',
   props<{ payload: any }>()
 );

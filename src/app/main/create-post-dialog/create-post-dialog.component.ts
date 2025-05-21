@@ -4,7 +4,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -22,7 +22,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
-import { createPost,  updateExistingPost } from '../../store/renthub.action';
+import { createNewPost, updateExistingPost } from '../../store/renthub.action';
 import { selectCreatePostSuccess } from '../../store/renthub.selectors';
 import { CommonService } from '../../services/common.service';
 
@@ -45,11 +45,10 @@ import { CommonService } from '../../services/common.service';
   templateUrl: './create-post-dialog.component.html',
   styleUrl: './create-post-dialog.component.scss',
 })
-export class CreatePostDialogComponent implements OnInit, OnDestroy{
- 
+export class CreatePostDialogComponent implements OnInit, OnDestroy {
   private store = inject(Store);
   private service = inject(CommonService);
-  readonly dialogRef = inject(MatDialogRef<CreatePostDialogComponent>);
+  private dialogRef = inject(MatDialogRef<CreatePostDialogComponent>);
   private destroy$ = new Subject<void>();
   data = inject(MAT_DIALOG_DATA);
   userId: number;
@@ -70,7 +69,7 @@ export class CreatePostDialogComponent implements OnInit, OnDestroy{
     priceMode: FormControl<string | null>;
     rentNegotiable: FormControl<boolean | null>;
     apartmentFurnished: FormControl<boolean | null>;
-    featured: FormControl<boolean | null>
+    featured: FormControl<boolean | null>;
     amenities: FormArray<FormControl<string>>;
   }>;
   selectedAmenities: string[] = [];
@@ -107,11 +106,14 @@ export class CreatePostDialogComponent implements OnInit, OnDestroy{
         this.setEditData(this.data.amenities);
       }
     }
-    this.service.getAuthenticateUser().pipe(takeUntil(this.destroy$)).subscribe((res) => {
-      if (res) {
-        this.userId = res?.id;
-      }
-    });
+    this.service
+      .getAuthenticateUser()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.userId = res?.id;
+        }
+      });
   }
 
   initForm(): void {
@@ -159,18 +161,7 @@ export class CreatePostDialogComponent implements OnInit, OnDestroy{
     const formValue = this.createPostForm.value;
     const selectedAmenities = this.getSelectedAmenities();
     if (this.createPostForm.valid) {
-      if(!this.data){
-        this.store.dispatch(
-          createPost({
-            payload: {
-              ...formValue,
-              userId: this.userId,
-              images: [],
-              amenities: selectedAmenities,
-            },
-          })
-        );
-      }else {
+      if(this.data){
         this.store.dispatch(
           updateExistingPost({
             payload: {
@@ -179,7 +170,19 @@ export class CreatePostDialogComponent implements OnInit, OnDestroy{
               images: [],
               amenities: selectedAmenities,
             },
-            postId: this.data?.id
+            postId: this.data?.id,
+          })
+        );
+      } else {
+        
+        this.store.dispatch(
+          createNewPost({
+            payload: {
+              ...formValue,
+              userId: this.userId,
+              images: [],
+              amenities: selectedAmenities,
+            },
           })
         );
       }
@@ -195,7 +198,7 @@ export class CreatePostDialogComponent implements OnInit, OnDestroy{
       );
     });
   }
-  
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

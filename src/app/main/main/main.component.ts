@@ -33,7 +33,7 @@ import { IFavoritesResponse } from '../../models/favorites.vm';
 })
 export class MainComponent {
   private store = inject(Store);
-  readonly dialog = inject(MatDialog);
+  private dialog = inject(MatDialog);
   private router = inject(Router);
   private service = inject(CommonService);
   private destroy$ = new Subject<void>();
@@ -60,7 +60,7 @@ export class MainComponent {
   ngOnInit(): void {
     this.store.dispatch(loadPosts());
     this.store.dispatch(loadFeaturedPosts());
-    this.service.getAuthenticateUser().subscribe((res) => {
+    this.service.getAuthenticateUser().pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res) {
         this.loggedInUserDetails.set(res);
         this.userId = res?.id;
@@ -99,13 +99,14 @@ export class MainComponent {
       maxWidth: '950px',
       autoFocus: false,
       data: post,
+      restoreFocus: false
     });
 
-    dialogRef.afterClosed().subscribe((res) => {
-      if (res) {
-        this.store.dispatch(loadPosts());
-      }
-    });
+    // dialogRef.afterClosed().subscribe((res) => {
+    //   if (res) {
+    //     this.store.dispatch(loadPosts());
+    //   }
+    // });
   }
 
   onFavoriteChange(postId: any): void {

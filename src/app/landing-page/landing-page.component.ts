@@ -16,17 +16,8 @@ import { Subject } from 'rxjs/internal/Subject';
 })
 export class LandingPageComponent implements OnInit {
   private destroy$ = new Subject<void>();
-  private dialog = inject(MatDialog);
 
   ngOnInit(): void {}
-
-  // editPost(post: IPostResponse): void {
-  //   this.dialog.open(CreatePostDialogComponent, {
-  //     maxWidth: '950px',
-  //     autoFocus: false,
-  //     data: post,
-  //   });
-  // }
 
   ngOnDestroy(): void {
     this.destroy$.next();

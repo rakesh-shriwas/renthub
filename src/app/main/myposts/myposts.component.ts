@@ -5,7 +5,10 @@ import { Store } from '@ngrx/store';
 import { CommonService } from '../../services/common.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { IPostResponse } from '../../models/post.vm';
-import { selectPosts } from '../../store/renthub.selectors';
+import {
+  selectPosts,
+  selectUpdateExistingPostSuccess,
+} from '../../store/renthub.selectors';
 import { loadPosts, loadPostsByUserId } from '../../store/renthub.action';
 import { CreatePostDialogComponent } from '../create-post-dialog/create-post-dialog.component';
 import { PostCardComponent } from '../post-card/post-card.component';
@@ -19,7 +22,7 @@ import { NotRecordFoundComponent } from '../not-record-found/not-record-found.co
 })
 export class MypostsComponent implements OnInit {
   private store = inject(Store);
-  readonly dialog = inject(MatDialog);
+  private dialog = inject(MatDialog);
   private router = inject(Router);
   private service = inject(CommonService);
   private destroy$ = new Subject<void>();
@@ -27,6 +30,9 @@ export class MypostsComponent implements OnInit {
   loggedInUserDetails = signal<any>(null);
   myPostList = signal<IPostResponse[]>([]);
   userId: number;
+  updateExistingPostSuccess$: Observable<any> = this.store.select(
+    selectUpdateExistingPostSuccess
+  );
 
   /** Store Post Data */
   posts$: Observable<IPostResponse[]> = this.store.select(selectPosts);
@@ -36,7 +42,7 @@ export class MypostsComponent implements OnInit {
       if (res) {
         this.loggedInUserDetails.set(res);
         this.userId = res?.id;
-        this.store.dispatch(loadPostsByUserId({userId: res?.id}));
+        this.store.dispatch(loadPostsByUserId({ userId: res?.id }));
       }
     });
     this.posts$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
@@ -45,6 +51,13 @@ export class MypostsComponent implements OnInit {
         this.myPostList.set(filterData);
       }
     });
+    this.updateExistingPostSuccess$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.store.dispatch(loadPostsByUserId({ userId: this.userId }));
+        }
+      });
   }
 
   viewDetails(postId: number): void {
@@ -52,10 +65,16 @@ export class MypostsComponent implements OnInit {
   }
 
   editPost(post: IPostResponse): void {
-    this.dialog.open(CreatePostDialogComponent, {
+    const dialogRef = this.dialog.open(CreatePostDialogComponent, {
       maxWidth: '950px',
       autoFocus: false,
       data: post,
+      restoreFocus: false
+    });
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res) {
+        this.store.dispatch(loadPosts());
+      }
     });
   }
 

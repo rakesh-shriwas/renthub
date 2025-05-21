@@ -69,7 +69,7 @@ export class CommonService {
    * @return {*}  {Observable<IPostResponse>}
    * @memberof CommonService
    */
-  createPost(postObj: IPostRequest): Observable<IPostResponse> {
+  createNewPost(postObj: IPostRequest): Observable<IPostResponse> {
     return this.http.post<IPostResponse>(`${this.apiUrl}/posts`, postObj);
   }
 

@@ -2,7 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import {
   addFavorite,
   addRemoveOperationStatus,
-  createPost,
+  createNewPost,
   createPostFailure,
   createPostSuccess,
   loadFavorites,
@@ -80,7 +80,7 @@ export const postReducer = createReducer(
     isLoading: false,
     posts,
   })),
-  on(createPost, (state) => ({
+  on(createNewPost, (state) => ({
     ...state,
     isLoading: true,
     createPostSuccess: false,

@@ -76,6 +76,7 @@ export class NavComponent implements OnInit {
     this.dialog.open(CreatePostDialogComponent, {
       maxWidth: '950px',
       autoFocus: false,
+      restoreFocus: false
     });
   }
 

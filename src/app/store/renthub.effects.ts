@@ -4,7 +4,7 @@ import { CommonService } from '../services/common.service';
 import {
   addFavorite,
   addRemoveOperationStatus,
-  createPost,
+  createNewPost,
   createPostFailure,
   createPostSuccess,
   loadFavorites,
@@ -76,9 +76,9 @@ export class PostEffects {
 
   createPost$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(createPost),
+      ofType(createNewPost),
       switchMap(({ payload }) =>
-        this.service.createPost(payload).pipe(
+        this.service.createNewPost(payload).pipe(
           map((post) => createPostSuccess({ post })),
           catchError((error) => of(createPostFailure({ error: error.message })))
         )
@@ -91,7 +91,7 @@ export class PostEffects {
       switchMap(({ payload, postId }) =>
         this.service.updatePostById(postId, payload).pipe(
           map((res) => updateExistingPostSuccess({ status: true })),
-          catchError((error) => of(createPostFailure({ error: error.message })))
+          catchError((error) => of())
         )
       )
     )

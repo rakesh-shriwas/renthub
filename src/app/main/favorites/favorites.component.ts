@@ -97,7 +97,7 @@ export class FavoritesComponent implements OnInit {
 
   onFavoriteChange(postId: any): void {
     this.service
-      .findFavorite(postId, this.loggedInUserDetails()?.id)
+      .findFavorite(postId, this.loggedInUserDetails()?.id).pipe(takeUntil(this.destroy$))
       .subscribe((favorites) => {
         if (favorites.length > 0) {
           const favorite = favorites[0];
