@@ -1,6 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, Subject, take, takeUntil } from 'rxjs';
+import {
+  combineLatest,
+  Observable,
+  skip,
+  Subject,
+  take,
+  takeUntil,
+} from 'rxjs';
 import { Router } from '@angular/router';
 import { IPostResponse } from '../../models/post.vm';
 import {
@@ -44,8 +51,6 @@ export class FavoritesComponent implements OnInit {
     this.store.select(selectFavorites);
 
   ngOnInit(): void {
-    this.store.dispatch(loadPosts());
-
     combineLatest([this.favorites$, this.posts$])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([favorites, posts]) => {
@@ -67,11 +72,13 @@ export class FavoritesComponent implements OnInit {
       });
     this.operationStatus$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res) {
-        this.store.dispatch(resetAddRemoveOperationStatus());
-        this.store.dispatch(loadPosts());
         this.store.dispatch(
           loadFavorites({ userId: this.loggedInUserDetails()?.id })
         );
+        this.store.dispatch(resetAddRemoveOperationStatus());
+        if(!(this.favoritesPostList()?.length -1)){
+          this.favoritesPostList.set([]);
+        }
       }
     });
     this.service.getAuthenticateUser().subscribe((res) => {
@@ -81,6 +88,7 @@ export class FavoritesComponent implements OnInit {
         this.store.dispatch(loadFavorites({ userId: res?.id }));
       }
     });
+    this.store.dispatch(loadPosts());
   }
 
   viewDetails(id: Event): void {
