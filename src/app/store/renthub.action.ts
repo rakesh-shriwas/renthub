@@ -69,3 +69,4 @@ export const addRemoveOperationStatus = createAction(
   '[Favorite] Operation Status',
   props<{ status: boolean }>()
 );
+export const resetAddRemoveOperationStatus = createAction('[Favorite] Reset Operation Status')

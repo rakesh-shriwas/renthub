@@ -7,11 +7,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonService } from '../../services/common.service';
 import { UserRole } from '../../enums/app.enum';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { IUser } from '../../models/user.vm';
+import { Store } from '@ngrx/store';
+import { selectFavoriteCount } from '../../store/renthub.selectors';
 
 @Component({
   selector: 'app-nav',
@@ -24,7 +27,8 @@ import { IUser } from '../../models/user.vm';
     AsyncPipe,
     NgIf,
     RouterLinkActive,
-    TitleCasePipe
+    TitleCasePipe,
+    MatBadgeModule
   ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.scss',
@@ -32,13 +36,16 @@ import { IUser } from '../../models/user.vm';
 export class NavComponent implements OnInit {
   private dialog = inject(MatDialog);
   private router = inject(Router);
+  private store = inject(Store);
   private service = inject(CommonService);
   loggedInUserDetails$ = new BehaviorSubject<IUser | null>(null);
   userRoles = UserRole;
 
+  favoriteCount$: Observable<number> = this.store.select(selectFavoriteCount);
+
   ngOnInit(): void {
     this.service.getAuthenticateUser().subscribe((res) => {
-      if(res){
+      if (res) {
         this.loggedInUserDetails$.next(res);
       }
     });

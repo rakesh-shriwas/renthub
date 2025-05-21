@@ -114,6 +114,10 @@ export class CommonService {
     return this.http.delete<any>(`${this.apiUrl}/favorites/${postId}`);
   }
 
+  findFavorite(postId: number, userId: number): Observable<IFavoritesResponse[]> {
+    return this.http.get<IFavoritesResponse[]>(`${this.apiUrl}/favorites?postId=${postId}&userId=${userId}`);
+  }
+
   /**
    * Get post comments by post id
    *

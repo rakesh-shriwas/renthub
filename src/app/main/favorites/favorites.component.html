@@ -4,7 +4,8 @@
     (viewPostDetails)="viewDetails($event)"
     (toggleFavorite)="onFavoriteChange($event)"
     [post]="favoritePost"
-    [loggedInUserDetails]="loggedInUser()"
+    [loggedInUserDetails]="loggedInUserDetails()"
+    [isFavorite]="isFavorite(favoritePost.id)"
   ></app-post-card>
   }
 </div>

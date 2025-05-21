@@ -21,7 +21,10 @@ export const selectUpdateExistingPostSuccess = createSelector(
   (state) => state.updateExistingPostSuccess
 );
 
-export const selectFeaturedPostsState = createSelector(selectRentPostState, (state) => state.featuredPosts)
+export const selectFeaturedPostsState = createSelector(
+  selectRentPostState,
+  (state) => state.featuredPosts
+);
 
 /** Favorites */
 export const selectFavorites = createSelector(
@@ -32,12 +35,21 @@ export const selectFavoriteIsLoading = createSelector(
   selectRentPostState,
   (state) => state.favoriteIsLoading
 );
+export const selectLoadFavoritesSuccess = createSelector(
+  selectRentPostState,
+  (state) => state.favoriteOperationStatus
+);
 export const isPostFavorite = (postId: number) =>
   createSelector(selectFavorites, (favorites) =>
     favorites.some((fav) => fav.postId === postId)
   );
 
-  export const selectOperationStatus = createSelector(selectRentPostState, (state) => state.favoriteOperationStatus)
+export const selectFavoriteCount = createSelector(selectRentPostState, (state) => state.favorites.length);
+
+export const selectOperationStatus = createSelector(
+  selectRentPostState,
+  (state) => state.favoriteOperationStatus
+);
 
 /** Comments Selectors */
 // export const selectCommentsState = createFeatureSelector<RentHubState>('comments');

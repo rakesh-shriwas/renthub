@@ -16,6 +16,7 @@ import { CurrencyPipe, TitleCasePipe } from '@angular/common';
 export class PostCardComponent implements OnInit {
   @Input() post: IPostResponse;
   @Input() loggedInUserDetails: any;
+  @Input() isFavorite: boolean = false;
   @Output() viewPostDetails = new EventEmitter();
   @Output() toggleFavorite = new EventEmitter();
   @Output() editPost = new EventEmitter();

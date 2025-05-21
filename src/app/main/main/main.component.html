@@ -1,17 +1,31 @@
 <h3>All Featured</h3>
 <div class="card-container">
-    @for (post of featuredPostsState$ | async; track post.id) {
-        <app-post-card (viewPostDetails)="viewDetails($event)" (editPost)="editPost($event)" [post]="post" [loggedInUserDetails]="loggedInUserDetails()"></app-post-card>
-    }@empty {
-        <app-not-record-found class="no-record"></app-not-record-found>
-    }
+  @for (post of featuredPostsState$ | async; track post.id) {
+  <app-post-card
+    (viewPostDetails)="viewDetails($event)"
+    (editPost)="editPost($event)"
+    [post]="post"
+    [loggedInUserDetails]="loggedInUserDetails()"
+    (toggleFavorite)="onFavoriteChange($event)"
+    [isFavorite]="isFavorite(post.id)"
+  ></app-post-card>
+  }@empty {
+  <app-not-record-found class="no-record"></app-not-record-found>
+  }
 </div>
 
 <h3>All Listing</h3>
 <div class="card-container">
-    @for (post of myPostList(); track post.id) {
-        <app-post-card (viewPostDetails)="viewDetails($event)" (editPost)="editPost($event)" [post]="post" [loggedInUserDetails]="loggedInUserDetails()"></app-post-card>
-    }@empty {
-        <app-not-record-found class="no-record"></app-not-record-found>
-    }
+  @for (post of myPostList(); track post.id) {
+  <app-post-card
+    (viewPostDetails)="viewDetails($event)"
+    (editPost)="editPost($event)"
+    [post]="post"
+    [loggedInUserDetails]="loggedInUserDetails()"
+    (toggleFavorite)="onFavoriteChange($event)"
+    [isFavorite]="isFavorite(post.id)"
+  ></app-post-card>
+  }@empty {
+  <app-not-record-found class="no-record"></app-not-record-found>
+  }
 </div>

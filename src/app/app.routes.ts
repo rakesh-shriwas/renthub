@@ -34,7 +34,7 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'my/posts/:id',
+        path: 'my/post/:id',
         loadComponent: () =>
           import('./main/post-details/post-details.component').then(
             (m) => m.PostDetailsComponent

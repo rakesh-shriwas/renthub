@@ -14,6 +14,7 @@ import {
   loadPostsByUserIdSuccess,
   loadPostSuccess,
   removeFavorite,
+  resetAddRemoveOperationStatus,
   updateExistingPost,
   updateExistingPostSuccess,
 } from './renthub.action';
@@ -58,7 +59,7 @@ export const postReducer = createReducer(
   })),
   on(loadPostSuccess, (state, { posts }) => ({
     ...state,
-    posts: posts.filter((post) => !post.featured),
+    posts,
     isLoading: false,
   })),
   on(loadFeaturedPosts, (state) => ({
@@ -127,5 +128,9 @@ export const postReducer = createReducer(
     ...state,
     isLoading: false,
     favoriteOperationStatus: status,
+  })),
+  on(resetAddRemoveOperationStatus, (state) => ({
+    ...state,
+    favoriteOperationStatus: false,
   }))
 );

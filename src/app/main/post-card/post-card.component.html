@@ -18,6 +18,7 @@
         {{ post.rent | currency : "INR" }}/{{ post.priceMode | titlecase }} -
         [{{ post.location | titlecase }}]
       </p>
+
     </div>
   </mat-card-content>
   <mat-card-actions>
@@ -31,11 +32,9 @@
       View Details
     </button>
     @if (loggedInUserDetails?.role === userRoles.Renters) {
-
     <button mat-fab class="fav-btn" (click)="toggleFavorite.emit(post.id)">
-      <!-- <mat-icon> favorite </mat-icon> -->
       <mat-icon>{{
-        post.isFavorite ? "favorite" : "favorite_border"
+        isFavorite ? "favorite" : "favorite_border"
       }}</mat-icon>
     </button>
     }

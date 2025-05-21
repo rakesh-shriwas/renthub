@@ -3,13 +3,18 @@ import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subject, take, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { IPostResponse } from '../../models/post.vm';
-import { selectFavorites, selectOperationStatus, selectPosts } from '../../store/renthub.selectors';
+import {
+  selectFavorites,
+  selectOperationStatus,
+  selectPosts,
+} from '../../store/renthub.selectors';
 import { IFavoritesResponse } from '../../models/favorites.vm';
 import {
   addFavorite,
   loadFavorites,
   loadPosts,
   removeFavorite,
+  resetAddRemoveOperationStatus,
 } from '../../store/renthub.action';
 import { PostCardComponent } from '../post-card/post-card.component';
 import { NotRecordFoundComponent } from '../not-record-found/not-record-found.component';
@@ -26,49 +31,56 @@ export class FavoritesComponent implements OnInit {
   private service = inject(CommonService);
   private destroy$ = new Subject<void>();
   private router = inject(Router);
-  loggedInUser = signal<any>(null);
+  loggedInUserDetails = signal<any>(null);
 
   favoritesPostList = signal<IPostResponse[]>([]);
+  favPostIds: number[] = [];
 
   posts$: Observable<IPostResponse[]> = this.store.select(selectPosts);
-  operationStatus$: Observable<boolean> = this.store.select(selectOperationStatus);
+  operationStatus$: Observable<boolean> = this.store.select(
+    selectOperationStatus
+  );
   favorites$: Observable<IFavoritesResponse[]> =
     this.store.select(selectFavorites);
 
   ngOnInit(): void {
     this.store.dispatch(loadPosts());
-    this.service.getAuthenticateUser().subscribe((res) => {
-      if (res) {
-        this.loggedInUser.set(res);
-        // this.componentStore.loadFavorites({ userId: res?.id });
-        this.store.dispatch(loadFavorites({ userId: res?.id }));
-      }
-    });
+
     combineLatest([this.favorites$, this.posts$])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([favorites, posts]) => {
         if (favorites?.length && posts?.length) {
-          console.log('posts', posts);
           // Step 1: Extract favorite post IDs
           const favoritePostIds = new Set(favorites.map((f) => f.postId));
-          console.log('favoritePostIds', favoritePostIds);
           // Step 2: Filter posts based on those favorite IDs
           const filterData = posts.filter((post) =>
             favoritePostIds.has(+post.id)
           );
-          // Step 3: Add isFavorite key to each filtered item
-          const favoritePostData = filterData.map((data) => ({
-            ...data,
-            isFavorite: favoritePostIds.has(data.id),
-          }));
-          this.favoritesPostList.set(favoritePostData);
-          console.log('this.favoritesPostList', this.favoritesPostList());
+          // // Step 3: Add isFavorite key to each filtered item
+          // const favoritePostData = filterData.map((data) => ({
+          //   ...data,
+          //   isFavorite: favoritePostIds.has(data.id),
+          // }));
+          this.favoritesPostList.set(filterData);
+          this.favPostIds = favorites.map((fav) => fav.postId);
         }
       });
-      this.operationStatus$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
+    this.operationStatus$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
+      if (res) {
+        this.store.dispatch(resetAddRemoveOperationStatus());
         this.store.dispatch(loadPosts());
-        this.store.dispatch(loadFavorites({ userId: this.loggedInUser()?.id }));
-      });
+        this.store.dispatch(
+          loadFavorites({ userId: this.loggedInUserDetails()?.id })
+        );
+      }
+    });
+    this.service.getAuthenticateUser().subscribe((res) => {
+      if (res) {
+        this.loggedInUserDetails.set(res);
+        // this.componentStore.loadFavorites({ userId: res?.id });
+        this.store.dispatch(loadFavorites({ userId: res?.id }));
+      }
+    });
   }
 
   viewDetails(id: Event): void {
@@ -76,22 +88,24 @@ export class FavoritesComponent implements OnInit {
   }
 
   onFavoriteChange(postId: any): void {
-    this.store
-      .select(selectFavorites)
-      .pipe(take(1))
+    this.service
+      .findFavorite(postId, this.loggedInUserDetails()?.id)
       .subscribe((favorites) => {
-        const isFav = favorites.some((fav) => fav.postId === postId);
-
-        if (isFav) {
-          this.store.dispatch(removeFavorite({ postId }));
+        if (favorites.length > 0) {
+          const favorite = favorites[0];
+          this.store.dispatch(removeFavorite({ postId: favorite.id }));
         } else {
           this.store.dispatch(
             addFavorite({
-              favorite: { postId, userId: this.loggedInUser()?.id },
+              favorite: { postId, userId: this.loggedInUserDetails()?.id },
             })
           );
         }
       });
+  }
+
+  isFavorite(postId: number): boolean {
+    return this.favPostIds.includes(postId);
   }
 
   ngOnDestroy(): void {

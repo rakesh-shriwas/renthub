@@ -5,12 +5,25 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CommonService } from '../../services/common.service';
 import { IPostResponse } from '../../models/post.vm';
-import { selectFeaturedPostsState, selectPosts, selectUpdateExistingPostSuccess } from '../../store/renthub.selectors';
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { loadFeaturedPosts, loadPosts } from '../../store/renthub.action';
+import {
+  selectFavorites,
+  selectFeaturedPostsState,
+  selectLoadFavoritesSuccess,
+  selectPosts,
+  selectUpdateExistingPostSuccess,
+} from '../../store/renthub.selectors';
+import { Observable, Subject, take, takeUntil } from 'rxjs';
+import {
+  addFavorite,
+  loadFavorites,
+  loadFeaturedPosts,
+  loadPosts,
+  removeFavorite,
+} from '../../store/renthub.action';
 import { CreatePostDialogComponent } from '../create-post-dialog/create-post-dialog.component';
 import { NotRecordFoundComponent } from '../not-record-found/not-record-found.component';
 import { AsyncPipe } from '@angular/common';
+import { IFavoritesResponse } from '../../models/favorites.vm';
 
 @Component({
   selector: 'app-main',
@@ -28,11 +41,21 @@ export class MainComponent {
   loggedInUserDetails = signal<any>(null);
   myPostList = signal<IPostResponse[]>([]);
   userId: number;
+  favoritesList: number[] = [];
 
   /** Store Post Data */
   posts$: Observable<IPostResponse[]> = this.store.select(selectPosts);
-  featuredPostsState$: Observable<IPostResponse[]> = this.store.select(selectFeaturedPostsState);
-  updateExistingPostSuccess$: Observable<any> = this.store.select(selectUpdateExistingPostSuccess);
+  featuredPostsState$: Observable<IPostResponse[]> = this.store.select(
+    selectFeaturedPostsState
+  );
+  updateExistingPostSuccess$: Observable<any> = this.store.select(
+    selectUpdateExistingPostSuccess
+  );
+  loadFavoritesSuccess$: Observable<any> = this.store.select(
+    selectLoadFavoritesSuccess
+  );
+  favorites$: Observable<IFavoritesResponse[]> =
+    this.store.select(selectFavorites);
 
   ngOnInit(): void {
     this.store.dispatch(loadPosts());
@@ -46,15 +69,25 @@ export class MainComponent {
     this.posts$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
       this.myPostList.set([]);
       if (res?.length) {
-        // const filterData = res.filter((post) => post.userId === +this.userId);
         this.myPostList.set(res);
       }
     });
-    this.updateExistingPostSuccess$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
+    this.updateExistingPostSuccess$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.store.dispatch(loadPosts());
+        }
+      });
+
+    this.favorites$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res) {
-        this.store.dispatch(loadPosts());
+        this.favoritesList = res.map(fav => fav.postId);;
       }
     });
+    this.store.dispatch(
+      loadFavorites({ userId: this.loggedInUserDetails()?.id })
+    );
   }
 
   viewDetails(postId: number): void {
@@ -73,6 +106,27 @@ export class MainComponent {
         this.store.dispatch(loadPosts());
       }
     });
+  }
+
+  onFavoriteChange(postId: any): void {
+    this.service
+      .findFavorite(postId, this.loggedInUserDetails()?.id)
+      .subscribe((favorites) => {
+        if (favorites.length > 0) {
+          const favorite = favorites[0];
+          this.store.dispatch(removeFavorite({ postId: favorite.id }));
+        } else {
+          this.store.dispatch(
+            addFavorite({
+              favorite: { postId, userId: this.loggedInUserDetails()?.id },
+            })
+          );
+        }
+      });
+  }
+
+  isFavorite(postId: number): boolean {
+    return this.favoritesList.includes(postId);
   }
 
   ngOnDestroy(): void {

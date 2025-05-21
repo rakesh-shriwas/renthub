@@ -38,9 +38,9 @@
       <span>Post List</span>
     </button>
     } @if (loggedInUserDetails.role === userRoles.Renters) {
-    <button mat-button [routerLink]="['/app', 'my', 'fav']" routerLinkActive="active">
+    <button mat-button [routerLink]="['/app', 'my', 'fav']" routerLinkActive="active"  [matBadge]="favoriteCount$ | async">
       <mat-icon>favorite</mat-icon>
-      <span>My Favorite</span>
+      <span matBadgeSize="small">My Favorite</span>
     </button>
     }
 
