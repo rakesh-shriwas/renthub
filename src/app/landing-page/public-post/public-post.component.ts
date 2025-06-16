@@ -9,7 +9,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { IUser } from '../../models/user.vm';
 import { PageNotFoundComponent } from '../../page-not-found/page-not-found.component';
 import { PostCardComponent } from '../../main/post-card/post-card.component';
-import { CommonService } from '../../services/common.service';
 
 @Component({
   selector: 'app-public-post',
@@ -20,12 +19,10 @@ import { CommonService } from '../../services/common.service';
 export class PublicPostComponent implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
-  private service = inject(CommonService);
   private destroy$ = new Subject<void>();
 
   myPostList = signal<IPostResponse[]>([]);
-  loggedInUser = signal<any>(null);
-  loggedInUserDetails: IUser;
+
 
   /** Store Post Data */
   posts$: Observable<IPostResponse[]> = this.store.select(selectPosts);
@@ -34,9 +31,7 @@ export class PublicPostComponent implements OnInit {
 
     this.posts$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res?.length) {
-          this.myPostList.set(res);
-          this.loggedInUser.set(this.loggedInUserDetails);
-        
+          this.myPostList.set(res);        
       }
     });
   }

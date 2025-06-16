@@ -90,7 +90,7 @@ export class PostEffects {
       ofType(updateExistingPost),
       switchMap(({ payload, postId }) =>
         this.service.updatePostById(postId, payload).pipe(
-          map((res) => updateExistingPostSuccess({ status: true })),
+          map(() => updateExistingPostSuccess({ status: true })),
           catchError((error) => of())
         )
       )

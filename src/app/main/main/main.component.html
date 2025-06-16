@@ -16,7 +16,7 @@
 
 <h3>All Listing</h3>
 <div class="card-container">
-  @for (post of myPostList(); track post.id) {
+  @for (post of posts$ | async; track post.id) {
   <app-post-card
     (viewPostDetails)="viewDetails($event)"
     (editPost)="editPost($event)"

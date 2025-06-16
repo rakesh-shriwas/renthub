@@ -57,6 +57,7 @@ export class FavoritesComponent implements OnInit {
         if (favorites?.length && posts?.length) {
           // Step 1: Extract favorite post IDs
           const favoritePostIds = new Set(favorites.map((f) => f.postId));
+          console.log('favoritePostIds', favoritePostIds);
           // Step 2: Filter posts based on those favorite IDs
           const filterData = posts.filter((post) =>
             favoritePostIds.has(+post.id)

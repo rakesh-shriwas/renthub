@@ -39,7 +39,7 @@ export class MainComponent {
   private destroy$ = new Subject<void>();
 
   loggedInUserDetails = signal<any>(null);
-  myPostList = signal<IPostResponse[]>([]);
+  // myPostList = signal<IPostResponse[]>([]);
   userId: number;
   favoritesList: number[] = [];
 
@@ -60,18 +60,21 @@ export class MainComponent {
   ngOnInit(): void {
     this.store.dispatch(loadPosts());
     this.store.dispatch(loadFeaturedPosts());
-    this.service.getAuthenticateUser().pipe(takeUntil(this.destroy$)).subscribe((res) => {
-      if (res) {
-        this.loggedInUserDetails.set(res);
-        this.userId = res?.id;
-      }
-    });
-    this.posts$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
-      this.myPostList.set([]);
-      if (res?.length) {
-        this.myPostList.set(res);
-      }
-    });
+    this.service
+      .getAuthenticateUser()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.loggedInUserDetails.set(res);
+          this.userId = res?.id;
+        }
+      });
+    // this.posts$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
+    //   this.myPostList.set([]);
+    //   if (res?.length) {
+    //     this.myPostList.set(res);
+    //   }
+    // });
     this.updateExistingPostSuccess$
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -82,12 +85,24 @@ export class MainComponent {
 
     this.favorites$.pipe(takeUntil(this.destroy$)).subscribe((res) => {
       if (res) {
-        this.favoritesList = res.map(fav => fav.postId);;
+        this.favoritesList = res.map((fav) => fav.postId);
+        console.log('favoritesList', this.favoritesList);
       }
     });
     this.store.dispatch(
       loadFavorites({ userId: this.loggedInUserDetails()?.id })
     );
+
+    // this.loadFavoritesSuccess$
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.store.dispatch(
+    //         loadFavorites({ userId: this.loggedInUserDetails()?.id })
+    //       );
+    //       this.store.dispatch(loadPosts());
+    //     }
+    //   });
   }
 
   viewDetails(postId: number): void {
@@ -95,18 +110,12 @@ export class MainComponent {
   }
 
   editPost(post: IPostResponse): void {
-    const dialogRef = this.dialog.open(CreatePostDialogComponent, {
+    this.dialog.open(CreatePostDialogComponent, {
       maxWidth: '950px',
       autoFocus: false,
       data: post,
-      restoreFocus: false
+      restoreFocus: false,
     });
-
-    // dialogRef.afterClosed().subscribe((res) => {
-    //   if (res) {
-    //     this.store.dispatch(loadPosts());
-    //   }
-    // });
   }
 
   onFavoriteChange(postId: any): void {
